@@ -1,18 +1,19 @@
-import { Controller, Get, Query } from "@nestjs/common";
-import { FindApodDto } from "../dtos/find-apod.dto.ts";
-import { ApodService } from "../useCases/find-apod.use-case.js";
+import { Controller, Get, Param } from "@nestjs/common";
+import { FindApodUseCase } from "../useCases/find-apod.use-case.js";
 
 @Controller("apod")
 export class ApodController {
-    constructor(private readonly apodService: ApodService) {}
+    constructor(private readonly apodService: FindApodUseCase) {}
 
-    // @Get()
-    // findAll() {
-    //     return this.apodService.findAll();
-    // }
-
-    @Get()
-    findOne(@Query() params: FindApodDto) {
-        return console.log(params);
+    @Get(":date")
+    findOne(@Param("date") date: string) {
+        console.log(this.apodService.execute(date));
+        return;
     }
+
+    // @Get("around")
+    // findAround(@Query() query: FindApodDto) {
+    //     console.log(this.apodService.execute(query.date));
+    //     return console.log(query);
+    // }
 }

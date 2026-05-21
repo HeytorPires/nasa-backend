@@ -1,12 +1,12 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { ApodDto } from "../dtos/apod.dto";
 
 @Injectable()
-export class ApodService {
-    findAll() {
-        return `This action returns all apod`;
-    }
+export class FindApodUseCase {
+    constructor() {}
 
-    findOne(id: number) {
-        return `This action returns a #${id} apod`;
+    async execute(date: string): Promise<ApodDto> {
+        // TODO: Implement APOD fetching without database
+        throw new NotFoundException("Apod not found");
     }
 }
