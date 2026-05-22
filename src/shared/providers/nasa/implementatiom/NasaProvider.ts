@@ -1,6 +1,6 @@
 import axios from "axios";
 import { INasaProvider } from "../models/INasaProvider";
-import { ApodResponse } from "src/modules/apod/interfaces/apod.response";
+import ApodResponse from "../models/IApodResponse";
 
 export default class NasaProvider implements INasaProvider {
     private apiKey: string;

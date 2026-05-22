@@ -1,4 +1,4 @@
-import { ApodResponse } from "src/modules/apod/interfaces/apod.response";
+import ApodResponse from "./IApodResponse";
 
 export interface INasaProvider {
     getApod(queryParams: string): Promise<ApodResponse>;

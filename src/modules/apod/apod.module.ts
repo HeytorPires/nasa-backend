@@ -1,10 +1,9 @@
 import { Module } from "@nestjs/common";
-import { ApodController } from "./controller/apod.controller";
-import { FindApodUseCase } from "./useCases/find-apod.use-case";
+import { ApodService } from "./apod.service";
+import { ApodController } from "./apod.controller";
 
 @Module({
-    imports: [],
     controllers: [ApodController],
-    providers: [FindApodUseCase],
+    providers: [ApodService],
 })
 export class ApodModule {}
