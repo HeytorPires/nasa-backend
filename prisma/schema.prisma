@@ -13,13 +13,15 @@ datasource db {
   provider = "postgresql"
 }
 
-model apods {
+model Apod {
   id              String   @id @default(uuid())
-  date            DateTime
+  date            DateTime @db.Date
   explanation     String
   media_type      String
   service_version String
   title           String
   url             String
   created_at      DateTime @default(now())
+
+  @@map("apods")
 }

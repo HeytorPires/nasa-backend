@@ -1,13 +1,27 @@
 import { Injectable } from "@nestjs/common";
+import { Apod } from "src/generated/prisma/client";
 import { PrismaService } from "src/modules/prisma/prisma.service";
-import { ApodEntity } from "../../entities/apod.entity";
 import { IApodRepository } from "../apod-repository.interface";
 
 @Injectable()
 export class ApodRepository implements IApodRepository {
     constructor(private readonly prisma: PrismaService) {}
 
-    async findByDate(date: Date): Promise<ApodEntity | null> {
+    async create(apod: Apod): Promise<Apod> {
+        return await this.prisma.apod.create({
+            data: {
+                date: apod.date,
+                title: apod.title,
+                explanation: apod.explanation,
+                url: apod.url,
+                media_type: apod.media_type,
+                service_version: apod.service_version,
+                created_at: apod.created_at,
+            },
+        });
+    }
+
+    async findByDate(date: Date): Promise<Apod | null> {
         return await this.prisma.apod.findFirst({
             where: { date },
         });

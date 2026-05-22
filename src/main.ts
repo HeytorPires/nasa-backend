@@ -13,4 +13,4 @@ async function bootstrap() {
     await app.listen(envConfigService.get(ENV_VARIABLE.PORT));
 }
 
-bootstrap();
+void bootstrap();

@@ -10,7 +10,7 @@ const urlDataBase = () => {
 export class PrismaService extends PrismaClient {
     constructor() {
         const adapter = new PrismaPg({ connectionString: urlDataBase() });
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+
         super({ adapter });
     }
 }
