@@ -7,6 +7,6 @@ export class ApodController {
 
     @Get()
     findByDate(@Param("date") date: string) {
-        return this.apodService.findByDate(date);
+        return this.apodService.findByDate(new Date(date));
     }
 }

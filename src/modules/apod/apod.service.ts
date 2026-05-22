@@ -1,13 +1,10 @@
-import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../prisma/prisma.service";
+import { Inject, Injectable } from "@nestjs/common";
+import { IApodRepository } from "./repositories/apod-repository.interface";
 
 @Injectable()
 export class ApodService {
-    constructor(private readonly prisma: PrismaService) {}
-    async findByDate(date: string) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-        return await this.prisma.apod.findUnique({
-            where: { date },
-        });
+    constructor(@Inject("IApodRepository") private readonly apodRepository: IApodRepository) {}
+    async findByDate(date: Date) {
+        return await this.apodRepository.findByDate(date);
     }
 }
