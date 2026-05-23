@@ -49,7 +49,7 @@ export function appConfig(app: INestApplication) {
             displayRequestDuration: true,
             filter: true,
         },
-        customSiteTitle: "Finlegder API",
+        customSiteTitle: "Nasa API",
         customCss: theme.getBuffer(SwaggerThemeNameEnum.DRACULA),
     });
 }
