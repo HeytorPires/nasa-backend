@@ -26,4 +26,28 @@ export class ApodRepository implements IApodRepository {
             where: { date },
         });
     }
+    async findBetweenDates(startDate: Date, endDate: Date): Promise<Apod[]> {
+        return await this.prisma.apod.findMany({
+            where: {
+                date: {
+                    gte: startDate,
+                    lte: endDate,
+                },
+            },
+            orderBy: {
+                date: "asc",
+            },
+        });
+    }
+
+    async countBetweenDates(startDate: Date, endDate: Date): Promise<number> {
+        return await this.prisma.apod.count({
+            where: {
+                date: {
+                    gte: startDate,
+                    lte: endDate,
+                },
+            },
+        });
+    }
 }

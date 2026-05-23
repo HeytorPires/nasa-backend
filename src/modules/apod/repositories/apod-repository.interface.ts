@@ -11,4 +11,6 @@ export interface IApodRepository {
         service_version,
         created_at,
     }: Partial<ApodEntity>): Promise<ApodEntity>;
+    countBetweenDates(startDate: Date, endDate: Date): Promise<number>;
+    findBetweenDates(startDate: Date, endDate: Date): Promise<ApodEntity[]>;
 }

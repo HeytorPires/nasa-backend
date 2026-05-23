@@ -27,20 +27,20 @@ export function appConfig(app: INestApplication) {
 
     const configSwagger = new DocumentBuilder()
         .setTitle("nasa-api")
-        .setDescription("Api Ledger para bancos")
+        .setDescription("Api facilitadora para consumir os dados da NASA")
         .setVersion("0.1")
-        .addBearerAuth({
-            type: "http",
-            scheme: "bearer",
-            bearerFormat: "JWT",
-            description: "Enter JWT token",
-            in: "header",
-        })
+        // .addBearerAuth({
+        //     type: "http",
+        //     scheme: "bearer",
+        //     bearerFormat: "JWT",
+        //     description: "Enter JWT token",
+        //     in: "header",
+        // })
         .build();
 
     const theme = new SwaggerTheme();
     const document = SwaggerModule.createDocument(app, configSwagger);
-    SwaggerModule.setup("api", app, document, {
+    SwaggerModule.setup("api-docs", app, document, {
         swaggerOptions: {
             persistAuthorization: true,
             docExpansion: "none",
