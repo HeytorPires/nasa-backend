@@ -4,7 +4,7 @@ import { PrismaService } from "src/modules/prisma/prisma.service";
 import { IApodRepository } from "../apod-repository.interface";
 
 @Injectable()
-export class ApodRepository implements IApodRepository {
+export class PrismaApodRepository implements IApodRepository {
     constructor(private readonly prisma: PrismaService) {}
 
     async create(apod: Apod): Promise<Apod> {

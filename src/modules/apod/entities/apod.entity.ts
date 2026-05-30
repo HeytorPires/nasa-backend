@@ -1,6 +1,6 @@
 import { Apod } from "src/generated/prisma/client";
 
-export class ApodEntity implements Apod {
+export abstract class ApodEntity implements Apod {
     id: string;
     date: Date;
     explanation: string;

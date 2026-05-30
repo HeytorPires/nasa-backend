@@ -6,8 +6,8 @@ import ApodResponse from "src/shared/providers/nasa/models/apod-response.interfa
 @Injectable()
 export class ApodService {
     constructor(
-        @Inject("INasaProvider") private readonly nasaApiService: INasaProvider,
-        @Inject("IApodRepository") private readonly apodRepository: IApodRepository,
+        @Inject("NasaProvider") private readonly nasaApiService: INasaProvider,
+        @Inject("ApodRepository") private readonly apodRepository: IApodRepository,
     ) {}
 
     private countDaysBetweenDates(startDate: Date, endDate: Date): number {
@@ -42,15 +42,7 @@ export class ApodService {
         const apodFromApi = await this.nasaApiService.getApod(`date=${date.toISOString().split("T")[0]}`);
 
         if (apodFromApi) {
-            await this.apodRepository.create({
-                date: new Date(apodFromApi.date),
-                title: apodFromApi.title,
-                explanation: apodFromApi.explanation,
-                url: apodFromApi.url,
-                media_type: apodFromApi.media_type,
-                service_version: apodFromApi.service_version,
-                created_at: new Date(),
-            });
+            await this.resolveCreateOrUpdate(apodFromApi);
             return apodFromApi;
         }
 
@@ -59,6 +51,10 @@ export class ApodService {
 
     async findBetweenDates(startDate: Date, endDate: Date) {
         const dayBetween = this.countDaysBetweenDates(startDate, endDate);
+
+        if (dayBetween > 30) {
+            throw new Error("The maximum date range is 30 days.");
+        }
         const countInDb = await this.apodRepository.countBetweenDates(startDate, endDate);
 
         if (countInDb === dayBetween) {
@@ -78,6 +74,10 @@ export class ApodService {
     }
 
     async findRandom(quantity: number) {
+        if (quantity > 100) {
+            throw new Error("The maximum quantity is 100.");
+        }
+
         const apodFromApi = await this.nasaApiService.getRandomApod(quantity);
 
         for (const apodData of apodFromApi) {
