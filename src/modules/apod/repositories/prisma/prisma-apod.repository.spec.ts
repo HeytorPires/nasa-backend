@@ -50,7 +50,7 @@ describe("PrismaApodRepository", () => {
     });
 
     describe("create", () => {
-        it("should create a new apod record", async () => {
+        it("Deve criar um novo registro de apod", async () => {
             mockPrismaService.apod.create.mockResolvedValue(mockApod);
 
             const result = await repository.create(mockApod);
@@ -71,7 +71,7 @@ describe("PrismaApodRepository", () => {
     });
 
     describe("findByDate", () => {
-        it("should return an apod for a given date", async () => {
+        it("Deve retornar um apod para uma data específica", async () => {
             mockPrismaService.apod.findFirst.mockResolvedValue(mockApod);
 
             const result = await repository.findByDate(new Date("2024-01-15"));
@@ -82,7 +82,7 @@ describe("PrismaApodRepository", () => {
             });
         });
 
-        it("should return null if no apod found", async () => {
+        it("Deve retornar null se nenhum apod for encontrado", async () => {
             mockPrismaService.apod.findFirst.mockResolvedValue(null);
 
             const result = await repository.findByDate(new Date("2024-01-15"));
@@ -92,7 +92,7 @@ describe("PrismaApodRepository", () => {
     });
 
     describe("findBetweenDates", () => {
-        it("should return apods between two dates ordered by date asc", async () => {
+        it("Deve retornar apods entre duas datas ordenados por data asc", async () => {
             const mockApods = [mockApod, { ...mockApod, id: "uuid-456" }];
             mockPrismaService.apod.findMany.mockResolvedValue(mockApods);
 
@@ -112,7 +112,7 @@ describe("PrismaApodRepository", () => {
     });
 
     describe("countBetweenDates", () => {
-        it("should return the count of apods between two dates", async () => {
+        it("Deve retornar a contagem de apods entre duas datas", async () => {
             mockPrismaService.apod.count.mockResolvedValue(5);
 
             const startDate = new Date("2024-01-01");

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { CallHandler, ExecutionContext } from "@nestjs/common";
 import { of } from "rxjs";
 import { LoggerInterceptor } from "./logger.interceptor";
