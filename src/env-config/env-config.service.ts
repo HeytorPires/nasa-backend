@@ -7,6 +7,12 @@ export const ENV_VARIABLE = {
     JWT_EXPIRES_IN: "JWT_EXPIRES_IN",
     PORT: "PORT",
     NASA_API_KEY: "NASA_API_KEY",
+    DB_HOST: "DB_HOST",
+    DB_PORT: "DB_PORT",
+    DB_USERNAME: "DB_USERNAME",
+    DB_NAME: "DB_NAME",
+    REDIS_HOST: "REDIS_HOST",
+    REDIS_PORT: "REDIS_PORT",
 } as const;
 
 export type EnvVariable = ObjectValues<typeof ENV_VARIABLE>;

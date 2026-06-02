@@ -11,6 +11,12 @@ describe("EnvConfigService", () => {
         JWT_EXPIRES_IN: "3600",
         PORT: "3000",
         NASA_API_KEY: "test-api-key",
+        DB_HOST: "localhost",
+        DB_PORT: "5432",
+        DB_USERNAME: "postgres",
+        DB_NAME: "nasa_db",
+        REDIS_HOST: "localhost",
+        REDIS_PORT: "6379",
     };
 
     beforeEach(async () => {
@@ -40,6 +46,12 @@ describe("EnvConfigService", () => {
             expect(service.get(ENV_VARIABLE.NASA_API_KEY)).toBe("test-api-key");
             expect(service.get(ENV_VARIABLE.JWT_SECRET)).toBe("test-secret");
             expect(service.get(ENV_VARIABLE.JWT_EXPIRES_IN)).toBe("3600");
+            expect(service.get(ENV_VARIABLE.DB_HOST)).toBe("localhost");
+            expect(service.get(ENV_VARIABLE.DB_PORT)).toBe("5432");
+            expect(service.get(ENV_VARIABLE.DB_USERNAME)).toBe("postgres");
+            expect(service.get(ENV_VARIABLE.DB_NAME)).toBe("nasa_db");
+            expect(service.get(ENV_VARIABLE.REDIS_HOST)).toBe("localhost");
+            expect(service.get(ENV_VARIABLE.REDIS_PORT)).toBe("6379");
         });
 
         it("should call configService.get with the correct key", () => {
