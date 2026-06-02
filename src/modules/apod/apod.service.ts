@@ -2,12 +2,14 @@ import { Inject, Injectable } from "@nestjs/common";
 import { IApodRepository } from "./repositories/apod-repository.interface";
 import { INasaProvider } from "src/shared/providers/nasa/models/nasa-provider.interface";
 import ApodResponse from "src/shared/providers/nasa/models/apod-response.interface";
+import { ICacheProvider } from "src/shared/providers/cache/models/redis-provider.interface";
 
 @Injectable()
 export class ApodService {
     constructor(
         @Inject("NasaProvider") private readonly nasaApiService: INasaProvider,
         @Inject("ApodRepository") private readonly apodRepository: IApodRepository,
+        @Inject("CacheProvider") private readonly cacheProvider: ICacheProvider,
     ) {}
 
     private countDaysBetweenDates(startDate: Date, endDate: Date): number {
@@ -20,7 +22,7 @@ export class ApodService {
             new Date(new Date(apodData.date).toISOString().split("T")[0]),
         );
         if (!existingApod) {
-            return await this.apodRepository.create({
+            await this.apodRepository.create({
                 date: new Date(apodData.date),
                 title: apodData.title,
                 explanation: apodData.explanation,
@@ -33,9 +35,17 @@ export class ApodService {
     }
 
     async findByDate(date: Date) {
+        const apodCacheKey = `apod:${date.toISOString().split("T")[0]}`;
+        const cachedApod = await this.cacheProvider.recover<ApodResponse>(apodCacheKey);
+
+        if (cachedApod) {
+            return cachedApod;
+        }
+
         const apod = await this.apodRepository.findByDate(date);
 
         if (apod) {
+            await this.cacheProvider.save(apodCacheKey, apod, 60 * 5);
             return apod;
         }
 
@@ -43,6 +53,7 @@ export class ApodService {
 
         if (apodFromApi) {
             await this.resolveCreateOrUpdate(apodFromApi);
+            await this.cacheProvider.save(apodCacheKey, apodFromApi, 60 * 5);
             return apodFromApi;
         }
 
