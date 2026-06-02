@@ -3,8 +3,6 @@ import { ConfigService } from "@nestjs/config";
 import { ObjectValues } from "src/utils/types";
 
 export const ENV_VARIABLE = {
-    JWT_SECRET: "JWT_SECRET",
-    JWT_EXPIRES_IN: "JWT_EXPIRES_IN",
     PORT: "PORT",
     NASA_API_KEY: "NASA_API_KEY",
     DB_HOST: "DB_HOST",
