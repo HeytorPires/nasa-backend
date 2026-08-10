@@ -1,19 +1,20 @@
 import { Module } from "@nestjs/common";
+import { TypeOrmModule } from "@nestjs/typeorm";
 import { ApodService } from "./apod.service";
 import { ApodController } from "./apod.controller";
-import { PrismaModule } from "../prisma/prisma.module";
 import { NasaModule } from "src/shared/providers/nasa/nasa.module";
-import { PrismaApodRepository } from "./repositories/prisma/prisma-apod.repository";
+import { TypeOrmApodRepository } from "./repositories/typeorm/typeorm-apod.repository";
 import { CacheModule } from "src/shared/providers/cache/cache.module";
+import { ApodEntity } from "./entities/apod.entity";
 
 @Module({
-    imports: [PrismaModule, CacheModule, NasaModule],
+    imports: [TypeOrmModule.forFeature([ApodEntity]), CacheModule, NasaModule],
     controllers: [ApodController],
     providers: [
         ApodService,
         {
             provide: "ApodRepository",
-            useClass: PrismaApodRepository,
+            useClass: TypeOrmApodRepository,
         },
     ],
 })

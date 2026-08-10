@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "apods" ALTER COLUMN "date" SET DATA TYPE DATE;

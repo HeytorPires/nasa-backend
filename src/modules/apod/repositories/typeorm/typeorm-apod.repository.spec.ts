@@ -1,17 +1,11 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { PrismaApodRepository } from "./prisma-apod.repository";
-import { PrismaService } from "src/modules/prisma/prisma.service";
+import { getRepositoryToken } from "@nestjs/typeorm";
+import { Between } from "typeorm";
+import { TypeOrmApodRepository } from "./typeorm-apod.repository";
+import { ApodEntity } from "../../entities/apod.entity";
 
-jest.mock("@prisma/adapter-pg", () => ({
-    PrismaPg: jest.fn().mockImplementation(() => ({})),
-}));
-
-jest.mock("src/generated/prisma/client", () => {
-    return { PrismaClient: jest.fn() };
-});
-
-describe("PrismaApodRepository", () => {
-    let repository: PrismaApodRepository;
+describe("TypeOrmApodRepository", () => {
+    let repository: TypeOrmApodRepository;
 
     const mockApod = {
         id: "uuid-123",
@@ -24,21 +18,23 @@ describe("PrismaApodRepository", () => {
         created_at: new Date(),
     };
 
-    const mockPrismaService = {
-        apod: {
-            create: jest.fn(),
-            findFirst: jest.fn(),
-            findMany: jest.fn(),
-            count: jest.fn(),
-        },
+    const mockApodEntityRepository = {
+        create: jest.fn(),
+        save: jest.fn(),
+        findOne: jest.fn(),
+        find: jest.fn(),
+        count: jest.fn(),
     };
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            providers: [PrismaApodRepository, { provide: PrismaService, useValue: mockPrismaService }],
+            providers: [
+                TypeOrmApodRepository,
+                { provide: getRepositoryToken(ApodEntity), useValue: mockApodEntityRepository },
+            ],
         }).compile();
 
-        repository = module.get<PrismaApodRepository>(PrismaApodRepository);
+        repository = module.get<TypeOrmApodRepository>(TypeOrmApodRepository);
     });
 
     afterEach(() => {
@@ -51,39 +47,31 @@ describe("PrismaApodRepository", () => {
 
     describe("create", () => {
         it("Deve criar um novo registro de apod", async () => {
-            mockPrismaService.apod.create.mockResolvedValue(mockApod);
+            mockApodEntityRepository.create.mockReturnValue(mockApod);
+            mockApodEntityRepository.save.mockResolvedValue(mockApod);
 
             const result = await repository.create(mockApod);
 
             expect(result).toEqual(mockApod);
-            expect(mockPrismaService.apod.create).toHaveBeenCalledWith({
-                data: {
-                    date: mockApod.date,
-                    title: mockApod.title,
-                    explanation: mockApod.explanation,
-                    url: mockApod.url,
-                    media_type: mockApod.media_type,
-                    service_version: mockApod.service_version,
-                    created_at: mockApod.created_at,
-                },
-            });
+            expect(mockApodEntityRepository.create).toHaveBeenCalledWith(mockApod);
+            expect(mockApodEntityRepository.save).toHaveBeenCalledWith(mockApod);
         });
     });
 
     describe("findByDate", () => {
         it("Deve retornar um apod para uma data específica", async () => {
-            mockPrismaService.apod.findFirst.mockResolvedValue(mockApod);
+            mockApodEntityRepository.findOne.mockResolvedValue(mockApod);
 
             const result = await repository.findByDate(new Date("2024-01-15"));
 
             expect(result).toEqual(mockApod);
-            expect(mockPrismaService.apod.findFirst).toHaveBeenCalledWith({
+            expect(mockApodEntityRepository.findOne).toHaveBeenCalledWith({
                 where: { date: new Date("2024-01-15") },
             });
         });
 
         it("Deve retornar null se nenhum apod for encontrado", async () => {
-            mockPrismaService.apod.findFirst.mockResolvedValue(null);
+            mockApodEntityRepository.findOne.mockResolvedValue(null);
 
             const result = await repository.findByDate(new Date("2024-01-15"));
 
@@ -94,7 +82,7 @@ describe("PrismaApodRepository", () => {
     describe("findBetweenDates", () => {
         it("Deve retornar apods entre duas datas ordenados por data asc", async () => {
             const mockApods = [mockApod, { ...mockApod, id: "uuid-456" }];
-            mockPrismaService.apod.findMany.mockResolvedValue(mockApods);
+            mockApodEntityRepository.find.mockResolvedValue(mockApods);
 
             const startDate = new Date("2024-01-01");
             const endDate = new Date("2024-01-15");
@@ -102,18 +90,18 @@ describe("PrismaApodRepository", () => {
             const result = await repository.findBetweenDates(startDate, endDate);
 
             expect(result).toEqual(mockApods);
-            expect(mockPrismaService.apod.findMany).toHaveBeenCalledWith({
+            expect(mockApodEntityRepository.find).toHaveBeenCalledWith({
                 where: {
-                    date: { gte: startDate, lte: endDate },
+                    date: Between(startDate, endDate),
                 },
-                orderBy: { date: "asc" },
+                order: { date: "ASC" },
             });
         });
     });
 
     describe("countBetweenDates", () => {
         it("Deve retornar a contagem de apods entre duas datas", async () => {
-            mockPrismaService.apod.count.mockResolvedValue(5);
+            mockApodEntityRepository.count.mockResolvedValue(5);
 
             const startDate = new Date("2024-01-01");
             const endDate = new Date("2024-01-05");
@@ -121,9 +109,9 @@ describe("PrismaApodRepository", () => {
             const result = await repository.countBetweenDates(startDate, endDate);
 
             expect(result).toBe(5);
-            expect(mockPrismaService.apod.count).toHaveBeenCalledWith({
+            expect(mockApodEntityRepository.count).toHaveBeenCalledWith({
                 where: {
-                    date: { gte: startDate, lte: endDate },
+                    date: Between(startDate, endDate),
                 },
             });
         });
