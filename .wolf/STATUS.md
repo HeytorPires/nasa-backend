@@ -61,6 +61,17 @@ caminhos de erro; `NASA_API_KEY` ausente da resposta da NeoWs; 12 tabelas com li
   `.env.example` traz `NODE_ENV=development`.
 - O Swagger continua montado em produção; só o log é condicional.
 
+### Fase 6 — CI/CD (2026-10-06)
+- CI em jobs paralelos (lint/format, unit+cobertura, integração+e2e com `migration:check`, build) e
+  imagem `linux/arm64` publicada no GHCR em push na `main`.
+- CD no modelo do api-nimbus: `workflow_run` → SSH na VPS Oracle → `git pull` → pull da imagem
+  `<sha>` → migrations antes do `up` → healthcheck em `/health` → rollback automático (todas as
+  migrations do deploy + `.last_deploy_tag`).
+- `GET /health` (Postgres + Redis com timeout de 3s), `docker-compose.prod.yml` separado do de dev,
+  `.dockerignore`, `USER node`, Dependabot e template de PR.
+- **Pendente do lado do usuário:** push; environment `production oracle` com secrets neste repo;
+  clone + `.env` na VPS; tornar o pacote GHCR público após o primeiro push.
+
 ## 🚀 Próxima fase
 
 **Objetivo:** endurecer a operação para múltiplas réplicas e observabilidade.

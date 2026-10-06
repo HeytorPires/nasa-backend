@@ -98,3 +98,22 @@
 ## Decision Log (2026-10-06)
 - O log do Swagger usa `http://localhost:${port}` em vez de `app.getUrl()`, que devolve `http://[::1]:PORT`.
 - O Swagger continua montado em produção; só o log depende de `NODE_ENV`. Desligar `/api-docs` em produção ainda não foi decidido.
+
+## Decision Log (2026-10-06 — CI/CD)
+- CD segue o modelo do `HeytorPires/api-nimbus` (mesma VPS Oracle ARM): imagem construída no CI em `ubuntu-24.04-arm`, VPS só faz pull; compose chega por `git pull`; migrations rodam num container efêmero antes do `up -d`; rollback via `.last_deploy_tag`.
+- Três melhorias sobre o nimbus: rollback reverte **todas** as migrations do deploy (conta `[X]` no `migration:show` antes/depois), Postgres/Redis sem portas publicadas em produção, healthcheck valida banco + Redis.
+- O usuário preferiu **dois arquivos de compose** (`docker-compose.yml` dev, `docker-compose.prod.yml` VPS) a um arquivo único com profile ou override.
+
+## Key Learnings (2026-10-06 — CI/CD)
+- `ioredis` com o Redis fora não rejeita o `PING`: enfileira e reconecta, então qualquer checagem de saúde precisa de timeout próprio.
+- `typeorm migration:show` sai com 0 mesmo havendo pendentes; só sai 1 em erro. Contar `[X]` é a forma de saber quantas foram aplicadas.
+- Em zsh, `$C` com espaços não sofre word splitting: scripts de deploy usam função (`dc() { docker compose -f ... "$@"; }`), não variável.
+- Container que sobe com falha de bind de porta fica sem port mapping mesmo depois de iniciado; exige `--force-recreate`.
+- Um container `postgres-db` de outro projeto ocupa a 5432 nesta máquina; foi parado (não removido) em 2026-10-06.
+
+## User Preferences (2026-10-06 — git)
+- **Nunca commitar sem pedido explícito, igual ao push.** Plano aprovado, "pode continuar" ou pedido de commit em turno anterior não autorizam commit. Deixar as mudanças no working tree e reportar.
+
+## Do-Not-Repeat (2026-10-06)
+- Commitei 7 mudanças de CI/CD sozinho porque o plano aprovado tinha um passo "commitar sem push"; o usuário mandou desfazer (`git reset --mixed HEAD~7`). Não incluir passo de commit em plano sem o usuário pedir.
+- CI: o usuário quer os steps de Node (setup-node, cache de node_modules, install) explícitos em cada job, não numa composite action; e o job unitário roda `yarn test --ci --coverage`.

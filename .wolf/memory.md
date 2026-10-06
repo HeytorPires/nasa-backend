@@ -130,3 +130,5 @@
 | Time | Action | File(s) | Outcome | ~Tokens |
 |------|--------|---------|---------|--------|
 | 09:01 | Handoff: STATUS.md (Fase 5), cerebrum (NODE_ENV), CLAUDE.md (regra de comentários em Architecture, format tests/), README | .wolf/*, CLAUDE.md, README.md | ok | ~6k |
+| 10:42 | CI/CD no modelo api-nimbus: ci.yml paralelo + imagem arm64 GHCR, cd.yml com migrations e rollback, /health, compose dev/prod separados, dependabot, docs | .github/*, src/modules/health, docker-compose*.yml, dockerfile, package.json, README, CLAUDE.md | ok | ~60k |
+| 10:47 | Desfeitos 7 commits de CI/CD (reset --mixed, nada perdido); CI com steps de Node explícitos por job e yarn test --ci --coverage; regra 'nunca commitar sem pedir' em memória e cerebrum | .github/workflows/ci.yml, README.md, CLAUDE.md, .wolf/cerebrum.md | ok | ~8k |

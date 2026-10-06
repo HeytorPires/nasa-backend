@@ -14,6 +14,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `yarn start:dev` — watch mode dev server
 - `yarn build` — Nest build
 - `yarn lint` — ESLint com `--fix`; `yarn lint:check` só verifica (é o que o CI roda)
+- `yarn format:check` / `yarn typecheck` — Prettier e `tsc --noEmit`, ambos no CI
+- `yarn migration:check` — `migration:generate --check`: sai com erro se entidade e migration
+  divergirem (roda no CI)
+- `yarn migration:{run,revert,show}:prod` — CLI do TypeORM sobre `dist/` (sem `ts-node`); é o que
+  roda dentro da imagem de produção
 - `yarn format` — Prettier sobre `src/**/*.ts` e `tests/**/*.ts`
 - `yarn test` — unitários (Jest, `rootDir: src`, padrão `*.spec.ts`); sem banco e sem rede
 - `yarn test -- apod.service.spec.ts` — um arquivo; `yarn test -- -t "nome"` — um teste
@@ -25,8 +30,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   `node -r ts-node/register -r tsconfig-paths/register`; sem `tsconfig-paths` o CLI não resolve os
   imports absolutos `src/...`. Com o schema em dia, `migration:generate` **sai vazia**: uma migration
   gerada com conteúdo significa que entidade e migration divergiram
-- `docker compose up -d postgres redis` — Postgres 18 + Redis 7 (lê `DB_*`, `PORT` e `NASA_API_KEY`
-  do `.env`)
+- `docker compose up -d postgres redis` — Postgres 18 + Redis 7 de desenvolvimento, com portas
+  publicadas. `docker-compose.prod.yml` é só da VPS (app + banco sem portas expostas)
 
 ## Environment
 
@@ -106,6 +111,25 @@ própria subárvore de uma pasta.
 
 **Comentários:** nenhum comentário explicativo no código; o conhecimento não óbvio vai para este
 arquivo. Só ficam diretivas de ferramenta (`eslint-disable`) e o bloco `addBearerAuth` comentado.
+
+## CI/CD
+
+- **CI** (`.github/workflows/ci.yml`): jobs paralelos `lint`, `test` (cobertura), `integration`
+  (`migration:check` + integração + e2e com Postgres/Redis) e `build`; o job `docker` depende dos
+  quatro e constrói `linux/arm64` em `ubuntu-24.04-arm` (a VPS Oracle é aarch64; imagem x86 morre com
+  `exec format error`). Só publica no GHCR em push na `main`. Cada job declara os próprios steps de
+  Node (setup-node 24, cache de `node_modules` pela chave do `yarn.lock`, install só em cache miss),
+  sem composite action. O job unitário roda `yarn test --ci --coverage`.
+- **CD** (`.github/workflows/cd.yml`): `workflow_run` do CI verde na `main`, environment
+  `production oracle`. Na VPS: `git pull`, pull da imagem `<sha>`, **migrations antes do `up`** num
+  container efêmero, healthcheck em `/health` e rollback automático (reverte todas as migrations do
+  deploy e volta para `.last_deploy_tag`). Mesmo modelo do `HeytorPires/api-nimbus`.
+- **Migration em produção roda no deploy, nunca no boot** (`migrationsRun` fica desligado). O
+  `DataSource` default de `src/config/typeorm.config.ts` monta o glob a partir de `__dirname` com a
+  extensão do próprio arquivo: serve ao `ts-node` (`src/`) e ao `dist/` sem casar os `.d.ts`.
+- **`GET /health`** (fora do `/v1`, fora do Swagger): `SELECT 1` + `PING` no Redis, cada um com
+  timeout de 3s. Sem o timeout o `ioredis` enfileira o `PING` com o Redis fora e a rota trava em vez
+  de responder 503. `ICacheProvider.ping()` existe só para isso.
 
 ## Armadilhas dos upstreams (verificadas em 2026-09-11)
 

@@ -2,19 +2,19 @@
   "version": 1,
   "created_at": "2026-08-10T13:37:08.662Z",
   "lifetime": {
-    "total_tokens_estimated": 31046,
-    "total_reads": 74,
+    "total_tokens_estimated": 43806,
+    "total_reads": 103,
     "total_writes": 0,
     "total_sessions": 19,
-    "anatomy_hits": 55,
-    "anatomy_misses": 19,
+    "anatomy_hits": 80,
+    "anatomy_misses": 21,
     "repeated_reads_blocked": 8,
-    "estimated_savings_vs_bare_cli": 15401,
-    "real_input_tokens": 2409,
-    "real_output_tokens": 716854,
-    "real_cache_read_tokens": 132836219,
-    "real_cache_creation_tokens": 2106492,
-    "real_api_calls": 735
+    "estimated_savings_vs_bare_cli": 20401,
+    "real_input_tokens": 3537,
+    "real_output_tokens": 1173750,
+    "real_cache_read_tokens": 230141262,
+    "real_cache_creation_tokens": 3303585,
+    "real_api_calls": 1299
   },
   "sessions": [
     {
@@ -723,6 +723,300 @@
         "cache_read_input_tokens": 2905279,
         "cache_creation_input_tokens": 95588,
         "api_calls": 31
+      }
+    },
+    {
+      "id": "session-2026-10-06-0859",
+      "agent": "claude",
+      "started": "2026-10-06T11:59:05.321Z",
+      "ended": "2026-10-06T13:14:01.912Z",
+      "reads": [
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/config/typeorm.config.ts",
+          "tokens_estimated": 648,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/package.json",
+          "tokens_estimated": 875,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/dockerfile",
+          "tokens_estimated": 154,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/docker-compose.yml",
+          "tokens_estimated": 328,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/.github/workflows/ci.yml",
+          "tokens_estimated": 547,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 2552,
+        "output_tokens_estimated": 0,
+        "reads_count": 5,
+        "writes_count": 0,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 5
+      },
+      "real_usage": {
+        "input_tokens": 192,
+        "output_tokens": 80045,
+        "cache_read_input_tokens": 14878456,
+        "cache_creation_input_tokens": 220156,
+        "api_calls": 96
+      }
+    },
+    {
+      "id": "session-2026-10-06-0859",
+      "agent": "claude",
+      "started": "2026-10-06T11:59:05.321Z",
+      "ended": "2026-10-06T13:17:57.884Z",
+      "reads": [
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/config/typeorm.config.ts",
+          "tokens_estimated": 648,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/package.json",
+          "tokens_estimated": 875,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/dockerfile",
+          "tokens_estimated": 154,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/docker-compose.yml",
+          "tokens_estimated": 328,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/.github/workflows/ci.yml",
+          "tokens_estimated": 547,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 2552,
+        "output_tokens_estimated": 0,
+        "reads_count": 5,
+        "writes_count": 0,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 5
+      },
+      "real_usage": {
+        "input_tokens": 196,
+        "output_tokens": 80830,
+        "cache_read_input_tokens": 15381321,
+        "cache_creation_input_tokens": 221704,
+        "api_calls": 98
+      }
+    },
+    {
+      "id": "session-2026-10-06-0859",
+      "agent": "claude",
+      "started": "2026-10-06T11:59:05.321Z",
+      "ended": "2026-10-06T13:18:55.212Z",
+      "reads": [
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/config/typeorm.config.ts",
+          "tokens_estimated": 648,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/package.json",
+          "tokens_estimated": 875,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/dockerfile",
+          "tokens_estimated": 154,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/docker-compose.yml",
+          "tokens_estimated": 328,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/.github/workflows/ci.yml",
+          "tokens_estimated": 547,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 2552,
+        "output_tokens_estimated": 0,
+        "reads_count": 5,
+        "writes_count": 0,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 5
+      },
+      "real_usage": {
+        "input_tokens": 202,
+        "output_tokens": 83685,
+        "cache_read_input_tokens": 16142177,
+        "cache_creation_input_tokens": 222882,
+        "api_calls": 101
+      }
+    },
+    {
+      "id": "session-2026-10-06-0859",
+      "agent": "claude",
+      "started": "2026-10-06T11:59:05.321Z",
+      "ended": "2026-10-06T13:43:50.266Z",
+      "reads": [
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/config/typeorm.config.ts",
+          "tokens_estimated": 648,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/package.json",
+          "tokens_estimated": 875,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/dockerfile",
+          "tokens_estimated": 154,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/docker-compose.yml",
+          "tokens_estimated": 328,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/.github/workflows/ci.yml",
+          "tokens_estimated": 547,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/modules/health/health.controller.spec.ts",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/modules/health/health.controller.ts",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 2552,
+        "output_tokens_estimated": 0,
+        "reads_count": 7,
+        "writes_count": 0,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 5
+      },
+      "real_usage": {
+        "input_tokens": 258,
+        "output_tokens": 102630,
+        "cache_read_input_tokens": 23800701,
+        "cache_creation_input_tokens": 259897,
+        "api_calls": 129
+      }
+    },
+    {
+      "id": "session-2026-10-06-0859",
+      "agent": "claude",
+      "started": "2026-10-06T11:59:05.321Z",
+      "ended": "2026-10-06T13:48:04.880Z",
+      "reads": [
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/config/typeorm.config.ts",
+          "tokens_estimated": 648,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/package.json",
+          "tokens_estimated": 875,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/dockerfile",
+          "tokens_estimated": 154,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/docker-compose.yml",
+          "tokens_estimated": 328,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/.github/workflows/ci.yml",
+          "tokens_estimated": 547,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/modules/health/health.controller.spec.ts",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/modules/health/health.controller.ts",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 2552,
+        "output_tokens_estimated": 0,
+        "reads_count": 7,
+        "writes_count": 0,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 5
+      },
+      "real_usage": {
+        "input_tokens": 280,
+        "output_tokens": 109706,
+        "cache_read_input_tokens": 27102388,
+        "cache_creation_input_tokens": 272454,
+        "api_calls": 140
       }
     }
   ],
