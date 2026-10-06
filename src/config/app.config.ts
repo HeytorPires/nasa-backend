@@ -25,6 +25,8 @@ export function appConfig(app: INestApplication) {
         type: VersioningType.URI,
     });
 
+    app.enableShutdownHooks();
+
     const configSwagger = new DocumentBuilder()
         .setTitle("nasa-api")
         .setDescription("Api facilitadora para consumir os dados da NASA")
