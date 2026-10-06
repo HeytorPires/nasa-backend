@@ -16,6 +16,8 @@ RUN yarn build
 #Rodando a aplicação em produção, copiando apenas os arquivos necessários do estágio anterior
 FROM node:24-alpine
 
+ENV NODE_ENV=production
+
 WORKDIR /usr/src/app
 
 COPY package.json yarn.lock ./
