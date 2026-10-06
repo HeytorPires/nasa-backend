@@ -64,6 +64,9 @@ yarn test:smoke                       # contra a NASA real; fora do CI
 yarn test:cov
 yarn lint                             # corrige
 yarn lint:check                       # só verifica, usado no CI
+yarn format:check                     # Prettier, usado no CI
+yarn typecheck                        # tsc --noEmit
+yarn migration:check                  # falha se entidade e migration divergirem
 ```
 
 Migrations: uma por tabela em `src/shared/infra/typeorm/migrations/`, escritas com a API tipada do
@@ -95,6 +98,60 @@ migrations continuam correspondendo às entidades. A suíte smoke pula sozinha q
 
 `PORT`, `NASA_API_KEY`, `DB_HOST`, `DB_PORT`, `DB_USERNAME`, `DB_PASSWORD`, `DB_NAME`,
 `REDIS_HOST`, `REDIS_PORT`. Veja `.env.example`.
+
+`NODE_ENV` é opcional: fora de `production`, o boot loga a URL do Swagger.
+
+## CI/CD
+
+**CI** (`.github/workflows/ci.yml`, em todo PR e push na `main`), com jobs em paralelo:
+
+| Job | O que roda |
+|---|---|
+| Lint & Format | `format:check`, `lint:check` |
+| Unit tests | `typecheck`, `yarn test --ci --coverage` (relatório como artifact) |
+| Integration & e2e | `migration:run`, `migration:check`, `test:integration`, `test:e2e` contra Postgres 18 + Redis 7 |
+| Build | `yarn build` |
+| Docker image | Depois dos quatro acima. Constrói a imagem `linux/arm64`; em push na `main`, publica `ghcr.io/heytorpires/nasa-backend:<sha>` e `:latest` |
+
+**CD** (`.github/workflows/cd.yml`) dispara quando o CI de um push na `main` termina verde e roda
+na VPS via SSH:
+
+1. `git pull` (só para atualizar o `docker-compose.prod.yml`);
+2. `pull` da imagem `<sha>` testada no CI;
+3. `migration:run:prod` num container efêmero da imagem nova, **antes** de trocar a aplicação;
+4. `up -d app` e healthcheck em `GET /health` (Postgres + Redis);
+5. se o healthcheck falhar: reverte todas as migrations aplicadas neste deploy, volta para a imagem
+   gravada em `.last_deploy_tag` e marca o run como falho.
+
+### Setup único da VPS
+
+```bash
+git clone https://github.com/HeytorPires/nasa-backend.git /home/ubuntu/nasa/nasa-backend
+cd /home/ubuntu/nasa/nasa-backend
+cp .env.example .env   # NODE_ENV=production, uma PORT livre, credenciais reais
+```
+
+- No GitHub, crie o environment **`production oracle`** com os secrets `VPS_HOST`, `VPS_USER`,
+  `VPS_SSH_KEY`, `VPS_PORT` (opcional, padrão 22) e `DEPLOY_PATH` (opcional, padrão
+  `/home/ubuntu/nasa/nasa-backend`).
+- Depois do primeiro push na `main`, torne público o pacote `nasa-backend` em *Packages* do GitHub,
+  para a VPS baixar a imagem sem login.
+- Em produção, Postgres e Redis ficam só na rede interna do compose; apenas `PORT` é publicada.
+
+Dev e produção usam arquivos separados: `docker-compose.yml` (Postgres e Redis com portas, para
+desenvolver) e `docker-compose.prod.yml` (aplicação + banco, usado pelo CD).
+
+Redeploy manual de uma versão já publicada, na VPS:
+
+```bash
+export IMAGE_TAG=<sha>
+docker compose -f docker-compose.prod.yml pull app
+docker compose -f docker-compose.prod.yml run --rm --no-deps app yarn migration:run:prod
+docker compose -f docker-compose.prod.yml up -d app
+```
+
+`yarn migration:revert:prod` desfaz uma migration por execução; `yarn migration:show:prod` lista o
+que está aplicado.
 
 ## Arquitetura
 

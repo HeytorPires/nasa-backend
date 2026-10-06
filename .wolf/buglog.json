@@ -251,6 +251,24 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-09-11T14:10:00Z"
+    },
+    {
+      "id": "bug-016",
+      "timestamp": "2026-10-06T10:42:52",
+      "error_message": "GET /health travava (timeout do curl) com o Redis parado em vez de responder 503",
+      "file": "src/modules/health/health.controller.ts",
+      "root_cause": "ioredis enfileira o PING no offline queue e fica reconectando; a promise nunca rejeita",
+      "fix": "withTimeout de 3s em cada checagem (Postgres e Redis) e timeout de 5s no http.get do healthcheck do CD",
+      "tags": [
+        "health",
+        "redis",
+        "ioredis",
+        "timeout",
+        "deploy"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-10-06T10:42:52"
     }
   ]
 }
