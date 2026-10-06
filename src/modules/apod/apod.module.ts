@@ -1,11 +1,12 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { ApodService } from "./apod.service";
-import { ApodController } from "./apod.controller";
-import { NasaModule } from "src/shared/providers/nasa/nasa.module";
-import { TypeOrmApodRepository } from "./repositories/typeorm/typeorm-apod.repository";
 import { CacheModule } from "src/shared/providers/cache/cache.module";
+import { NasaModule } from "src/shared/providers/nasa/nasa.module";
+import { APOD_REPOSITORY } from "src/shared/tokens";
+import { ApodController } from "./apod.controller";
+import { ApodService } from "./apod.service";
 import { ApodEntity } from "./entities/apod.entity";
+import { TypeOrmApodRepository } from "./repositories/typeorm/typeorm-apod.repository";
 
 @Module({
     imports: [TypeOrmModule.forFeature([ApodEntity]), CacheModule, NasaModule],
@@ -13,7 +14,7 @@ import { ApodEntity } from "./entities/apod.entity";
     providers: [
         ApodService,
         {
-            provide: "ApodRepository",
+            provide: APOD_REPOSITORY,
             useClass: TypeOrmApodRepository,
         },
     ],
