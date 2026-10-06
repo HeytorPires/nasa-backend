@@ -19,7 +19,9 @@ export default tseslint.config(
             },
             sourceType: "commonjs",
             parserOptions: {
-                projectService: true,
+                // `test/` fica fora do tsconfig principal (rootDir: ./src), então
+                // o lint usa um projeto próprio que cobre src e test.
+                project: ["./tsconfig.eslint.json"],
                 tsconfigRootDir: import.meta.dirname,
             },
         },
