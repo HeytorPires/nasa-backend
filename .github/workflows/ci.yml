@@ -2,9 +2,9 @@ name: CI
 
 on:
     push:
-        branches: [main]
+        branches: [staging, production]
     pull_request:
-        branches: [main]
+        branches: [staging, production]
 
 concurrency:
     group: ci-${{ github.ref }}
@@ -196,7 +196,8 @@ jobs:
             packages: write
 
         env:
-            PUBLISH: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+            PUBLISH: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/production') }}
+            CHANNEL_TAG: ${{ github.ref == 'refs/heads/production' && 'latest' || 'staging' }}
 
         steps:
             - uses: actions/checkout@v4
@@ -221,6 +222,6 @@ jobs:
                   push: ${{ env.PUBLISH == 'true' }}
                   tags: |
                       ghcr.io/heytorpires/nasa-backend:${{ github.sha }}
-                      ghcr.io/heytorpires/nasa-backend:latest
+                      ghcr.io/heytorpires/nasa-backend:${{ env.CHANNEL_TAG }}
                   cache-from: type=gha
                   cache-to: type=gha,mode=max

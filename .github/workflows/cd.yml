@@ -4,7 +4,7 @@ on:
     workflow_run:
         workflows: [CI]
         types: [completed]
-        branches: [main]
+        branches: [production]
 
 concurrency:
     group: deploy-production
@@ -49,7 +49,9 @@ jobs:
                       set -e
                       cd "${{ secrets.DEPLOY_PATH || '/home/ubuntu/nasa/nasa-backend' }}"
 
-                      git pull origin main
+                      git fetch origin production
+                      git checkout production
+                      git merge --ff-only origin/production
 
                       PREVIOUS_TAG=$(cat .last_deploy_tag 2>/dev/null || echo "latest")
                       export IMAGE_TAG=${{ github.event.workflow_run.head_sha }}

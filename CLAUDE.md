@@ -30,9 +30,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   `node -r ts-node/register -r tsconfig-paths/register`; sem `tsconfig-paths` o CLI não resolve os
   imports absolutos `src/...`. Com o schema em dia, `migration:generate` **sai vazia**: uma migration
   gerada com conteúdo significa que entidade e migration divergiram
- `docker compose up -d postgres redis` — Postgres 18 + Redis 7 de desenvolvimento, com portas
-  publicadas. `docker-compose.prod.yml` é só da VPS (app + banco sem portas expostas)
-=======
 - `docker compose up -d postgres redis` — Postgres 18 + Redis 7 de desenvolvimento, publicados em
   `DB_PORT`/`REDIS_PORT`. `docker-compose.prod.yml` é só da VPS (app + banco sem portas expostas).
   Os dois composes leem `DB_HOST`/`DB_PORT`/`REDIS_HOST`/`REDIS_PORT` do `.env`, e os containers
@@ -120,14 +117,18 @@ arquivo. Só ficam diretivas de ferramenta (`eslint-disable`) e o bloco `addBear
 
 ## CI/CD
 
+- **Branches:** só `staging` (default; PRs e dependabot apontam para ela) e `production`. Não há
+  `main`. Release = merge (PR ou direto) de `staging` em `production`.
 - **CI** (`.github/workflows/ci.yml`): jobs paralelos `lint`, `test` (cobertura), `integration`
   (`migration:check` + integração + e2e com Postgres/Redis) e `build`; o job `docker` depende dos
   quatro e constrói `linux/arm64` em `ubuntu-24.04-arm` (a VPS Oracle é aarch64; imagem x86 morre com
-  `exec format error`). Só publica no GHCR em push na `main`. Cada job declara os próprios steps de
+  `exec format error`). Roda em PR e push para `staging`/`production` e só publica no GHCR em push:
+  `:<sha>` sempre, mais `:staging` (push na `staging`) ou `:latest` (push na `production`). Cada job declara os próprios steps de
   Node (setup-node 24, cache de `node_modules` pela chave do `yarn.lock`, install só em cache miss),
   sem composite action. O job unitário roda `yarn test --ci --coverage`.
-- **CD** (`.github/workflows/cd.yml`): `workflow_run` do CI verde na `main`, environment
-  `production oracle`. Na VPS: `git pull`, pull da imagem `<sha>`, **migrations antes do `up`** num
+- **CD** (`.github/workflows/cd.yml`): `workflow_run` do CI verde de um push na `production`
+  (staging não tem deploy), environment `production`. Na VPS: `git checkout production` +
+  `merge --ff-only` (falha se a VPS tiver commit local), pull da imagem `<sha>`, **migrations antes do `up`** num
   container efêmero, healthcheck em `/health` e rollback automático (reverte todas as migrations do
   deploy e volta para `.last_deploy_tag`). Mesmo modelo do `HeytorPires/api-nimbus`.
 - **Migration em produção roda no deploy, nunca no boot** (`migrationsRun` fica desligado). O
