@@ -1,0 +1,735 @@
+{
+  "version": 1,
+  "created_at": "2026-08-10T13:37:08.662Z",
+  "lifetime": {
+    "total_tokens_estimated": 31046,
+    "total_reads": 74,
+    "total_writes": 0,
+    "total_sessions": 19,
+    "anatomy_hits": 55,
+    "anatomy_misses": 19,
+    "repeated_reads_blocked": 8,
+    "estimated_savings_vs_bare_cli": 15401,
+    "real_input_tokens": 2409,
+    "real_output_tokens": 716854,
+    "real_cache_read_tokens": 132836219,
+    "real_cache_creation_tokens": 2106492,
+    "real_api_calls": 735
+  },
+  "sessions": [
+    {
+      "id": "session-2026-08-10-1037",
+      "agent": "claude",
+      "started": "2026-08-10T13:37:13.768Z",
+      "ended": "2026-08-10T13:45:55.439Z",
+      "reads": [
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/prisma/schema.prisma",
+          "tokens_estimated": 167,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/modules/prisma/prisma.service.ts",
+          "tokens_estimated": 156,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/modules/apod/repositories/prisma/prisma-apod.repository.ts",
+          "tokens_estimated": 462,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/modules/apod/repositories/apod-repository.interface.ts",
+          "tokens_estimated": 140,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/modules/apod/entities/apod.entity.ts",
+          "tokens_estimated": 79,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/modules/prisma/prisma.module.ts",
+          "tokens_estimated": 70,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/modules/apod/apod.module.ts",
+          "tokens_estimated": 200,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/package.json",
+          "tokens_estimated": 845,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/app.module.ts",
+          "tokens_estimated": 105,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/env-config/env-config.service.ts",
+          "tokens_estimated": 321,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/.env.example",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/modules/apod/apod.service.ts",
+          "tokens_estimated": 1014,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/main.ts",
+          "tokens_estimated": 133,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/modules/apod/repositories/prisma/prisma-apod.repository.spec.ts",
+          "tokens_estimated": 1248,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/modules/apod/apod.service.spec.ts",
+          "tokens_estimated": 2143,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/CLAUDE.md",
+          "tokens_estimated": 933,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 8016,
+        "output_tokens_estimated": 0,
+        "reads_count": 16,
+        "writes_count": 0,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 15
+      },
+      "real_usage": {
+        "input_tokens": 395,
+        "output_tokens": 18852,
+        "cache_read_input_tokens": 3178651,
+        "cache_creation_input_tokens": 65801,
+        "api_calls": 41
+      }
+    },
+    {
+      "id": "session-2026-08-10-1037",
+      "agent": "claude",
+      "started": "2026-08-10T13:37:13.768Z",
+      "ended": "2026-08-10T13:48:15.699Z",
+      "reads": [
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/prisma/schema.prisma",
+          "tokens_estimated": 167,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/modules/prisma/prisma.service.ts",
+          "tokens_estimated": 156,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/modules/apod/repositories/prisma/prisma-apod.repository.ts",
+          "tokens_estimated": 462,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/modules/apod/repositories/apod-repository.interface.ts",
+          "tokens_estimated": 140,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/modules/apod/entities/apod.entity.ts",
+          "tokens_estimated": 79,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/modules/prisma/prisma.module.ts",
+          "tokens_estimated": 70,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/modules/apod/apod.module.ts",
+          "tokens_estimated": 200,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/package.json",
+          "tokens_estimated": 845,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/app.module.ts",
+          "tokens_estimated": 105,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/env-config/env-config.service.ts",
+          "tokens_estimated": 321,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/.env.example",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/modules/apod/apod.service.ts",
+          "tokens_estimated": 1014,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/main.ts",
+          "tokens_estimated": 133,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/modules/apod/repositories/prisma/prisma-apod.repository.spec.ts",
+          "tokens_estimated": 1248,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/modules/apod/apod.service.spec.ts",
+          "tokens_estimated": 2143,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/CLAUDE.md",
+          "tokens_estimated": 933,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/config/typeorm.config.ts",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 8016,
+        "output_tokens_estimated": 0,
+        "reads_count": 17,
+        "writes_count": 0,
+        "repeated_reads_blocked": 2,
+        "anatomy_lookups": 15
+      },
+      "real_usage": {
+        "input_tokens": 417,
+        "output_tokens": 22729,
+        "cache_read_input_tokens": 4276836,
+        "cache_creation_input_tokens": 73330,
+        "api_calls": 52
+      }
+    },
+    {
+      "id": "session-2026-08-10-1037",
+      "agent": "claude",
+      "started": "2026-08-10T13:37:13.768Z",
+      "ended": "2026-08-10T13:49:02.929Z",
+      "reads": [
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/prisma/schema.prisma",
+          "tokens_estimated": 167,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/modules/prisma/prisma.service.ts",
+          "tokens_estimated": 156,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/modules/apod/repositories/prisma/prisma-apod.repository.ts",
+          "tokens_estimated": 462,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/modules/apod/repositories/apod-repository.interface.ts",
+          "tokens_estimated": 140,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/modules/apod/entities/apod.entity.ts",
+          "tokens_estimated": 79,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/modules/prisma/prisma.module.ts",
+          "tokens_estimated": 70,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/modules/apod/apod.module.ts",
+          "tokens_estimated": 200,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/package.json",
+          "tokens_estimated": 845,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/app.module.ts",
+          "tokens_estimated": 105,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/env-config/env-config.service.ts",
+          "tokens_estimated": 321,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/.env.example",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/modules/apod/apod.service.ts",
+          "tokens_estimated": 1014,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/main.ts",
+          "tokens_estimated": 133,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/modules/apod/repositories/prisma/prisma-apod.repository.spec.ts",
+          "tokens_estimated": 1248,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/modules/apod/apod.service.spec.ts",
+          "tokens_estimated": 2143,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/CLAUDE.md",
+          "tokens_estimated": 933,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/config/typeorm.config.ts",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 8016,
+        "output_tokens_estimated": 0,
+        "reads_count": 17,
+        "writes_count": 0,
+        "repeated_reads_blocked": 3,
+        "anatomy_lookups": 15
+      },
+      "real_usage": {
+        "input_tokens": 419,
+        "output_tokens": 22816,
+        "cache_read_input_tokens": 4380446,
+        "cache_creation_input_tokens": 73451,
+        "api_calls": 53
+      }
+    },
+    {
+      "id": "session-2026-08-10-1049",
+      "agent": "claude",
+      "started": "2026-08-10T13:49:32.721Z",
+      "ended": "2026-08-10T13:51:02.537Z",
+      "reads": [
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/config/typeorm.config.ts",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 0,
+        "output_tokens_estimated": 0,
+        "reads_count": 1,
+        "writes_count": 0,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 0
+      },
+      "real_usage": {
+        "input_tokens": 4,
+        "output_tokens": 452,
+        "cache_read_input_tokens": 82684,
+        "cache_creation_input_tokens": 22603,
+        "api_calls": 2
+      }
+    },
+    {
+      "id": "session-2026-09-02-1318",
+      "agent": "claude",
+      "started": "2026-09-02T16:18:22.865Z",
+      "ended": "2026-09-02T16:43:20.855Z",
+      "reads": [
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/modules/apod/apod.service.ts",
+          "tokens_estimated": 1014,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/shared/providers/scheduler/scheduler.module.ts",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/shared/providers/scheduler/implementations/cron-provider.ts",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/shared/providers/scheduler/models/scheduler-provider.interface.ts",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/shared/providers/scheduler/models/task.interface.ts",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/app.module.ts",
+          "tokens_estimated": 105,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/tsconfig.json",
+          "tokens_estimated": 281,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/modules/apod/apod.module.ts",
+          "tokens_estimated": 200,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 1600,
+        "output_tokens_estimated": 0,
+        "reads_count": 8,
+        "writes_count": 0,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 4
+      },
+      "real_usage": {
+        "input_tokens": 84,
+        "output_tokens": 29809,
+        "cache_read_input_tokens": 3068729,
+        "cache_creation_input_tokens": 91337,
+        "api_calls": 42
+      }
+    },
+    {
+      "id": "session-2026-09-02-1318",
+      "agent": "claude",
+      "started": "2026-09-02T16:18:22.865Z",
+      "ended": "2026-09-02T17:02:40.784Z",
+      "reads": [
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/modules/apod/apod.service.ts",
+          "tokens_estimated": 1014,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/shared/providers/scheduler/scheduler.module.ts",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/shared/providers/scheduler/implementations/cron-provider.ts",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/shared/providers/scheduler/models/scheduler-provider.interface.ts",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/shared/providers/scheduler/models/task.interface.ts",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/app.module.ts",
+          "tokens_estimated": 105,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/tsconfig.json",
+          "tokens_estimated": 281,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/src/modules/apod/apod.module.ts",
+          "tokens_estimated": 200,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 1600,
+        "output_tokens_estimated": 0,
+        "reads_count": 8,
+        "writes_count": 0,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 4
+      },
+      "real_usage": {
+        "input_tokens": 94,
+        "output_tokens": 35411,
+        "cache_read_input_tokens": 3571339,
+        "cache_creation_input_tokens": 97054,
+        "api_calls": 47
+      }
+    },
+    {
+      "id": "session-2026-09-11-0853",
+      "agent": "claude",
+      "started": "2026-09-11T11:53:38.527Z",
+      "ended": "2026-09-11T12:58:36.263Z",
+      "reads": [
+        {
+          "file": "/tmp/claude-1000/-home-heytor-Dev-Pessoal-nasa-backend/cab7aab3-03c1-4520-b477-c6a00d98a13c/tasks/bte75toqq.output",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 0,
+        "output_tokens_estimated": 0,
+        "reads_count": 1,
+        "writes_count": 0,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 0
+      },
+      "real_usage": {
+        "input_tokens": 356,
+        "output_tokens": 213900,
+        "cache_read_input_tokens": 38292676,
+        "cache_creation_input_tokens": 643749,
+        "api_calls": 178
+      }
+    },
+    {
+      "id": "session-2026-09-11-0853",
+      "agent": "claude",
+      "started": "2026-09-11T11:53:38.527Z",
+      "ended": "2026-09-11T13:41:36.639Z",
+      "reads": [
+        {
+          "file": "/tmp/claude-1000/-home-heytor-Dev-Pessoal-nasa-backend/cab7aab3-03c1-4520-b477-c6a00d98a13c/tasks/bte75toqq.output",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 0,
+        "output_tokens_estimated": 0,
+        "reads_count": 1,
+        "writes_count": 0,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 0
+      },
+      "real_usage": {
+        "input_tokens": 504,
+        "output_tokens": 326489,
+        "cache_read_input_tokens": 70012538,
+        "cache_creation_input_tokens": 782917,
+        "api_calls": 252
+      }
+    },
+    {
+      "id": "session-2026-09-25-1514",
+      "agent": "claude",
+      "started": "2026-09-25T18:14:17.955Z",
+      "ended": "2026-09-25T18:17:15.983Z",
+      "reads": [
+        {
+          "file": "/home/heytor/.claude/projects/-home-heytor-Dev-Pessoal-nasa-backend/d6510acf-5f10-4453-9323-67bf31db52a6/tool-results/be9ozzvlx.txt",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 0,
+        "output_tokens_estimated": 0,
+        "reads_count": 1,
+        "writes_count": 0,
+        "repeated_reads_blocked": 1,
+        "anatomy_lookups": 0
+      },
+      "real_usage": {
+        "input_tokens": 28,
+        "output_tokens": 10387,
+        "cache_read_input_tokens": 1081319,
+        "cache_creation_input_tokens": 77057,
+        "api_calls": 14
+      }
+    },
+    {
+      "id": "session-2026-10-06-0831",
+      "agent": "claude",
+      "started": "2026-10-06T11:31:44.538Z",
+      "ended": "2026-10-06T11:50:58.970Z",
+      "reads": [
+        {
+          "file": "/home/heytor/.claude/projects/-home-heytor-Dev-Pessoal-nasa-backend/a1bc9564-ec35-4941-aa64-d5e97dbec010/tool-results/b5309njjg.txt",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/CLAUDE.md",
+          "tokens_estimated": 1899,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 1899,
+        "output_tokens_estimated": 0,
+        "reads_count": 2,
+        "writes_count": 0,
+        "repeated_reads_blocked": 1,
+        "anatomy_lookups": 1
+      },
+      "real_usage": {
+        "input_tokens": 46,
+        "output_tokens": 15458,
+        "cache_read_input_tokens": 1985722,
+        "cache_creation_input_tokens": 83605,
+        "api_calls": 23
+      }
+    },
+    {
+      "id": "session-2026-10-06-0831",
+      "agent": "claude",
+      "started": "2026-10-06T11:31:44.538Z",
+      "ended": "2026-10-06T11:58:54.247Z",
+      "reads": [
+        {
+          "file": "/home/heytor/.claude/projects/-home-heytor-Dev-Pessoal-nasa-backend/a1bc9564-ec35-4941-aa64-d5e97dbec010/tool-results/b5309njjg.txt",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/heytor/Dev/Pessoal/nasa-backend/CLAUDE.md",
+          "tokens_estimated": 1899,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 1899,
+        "output_tokens_estimated": 0,
+        "reads_count": 2,
+        "writes_count": 0,
+        "repeated_reads_blocked": 1,
+        "anatomy_lookups": 1
+      },
+      "real_usage": {
+        "input_tokens": 62,
+        "output_tokens": 20551,
+        "cache_read_input_tokens": 2905279,
+        "cache_creation_input_tokens": 95588,
+        "api_calls": 31
+      }
+    }
+  ],
+  "daemon_usage": [],
+  "waste_flags": [],
+  "optimization_report": {
+    "last_generated": null,
+    "patterns": []
+  }
+}
