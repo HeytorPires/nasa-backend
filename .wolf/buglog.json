@@ -1,0 +1,256 @@
+{
+  "version": 1,
+  "bugs": [
+    {
+      "id": "bug-001",
+      "timestamp": "2026-09-02T16:45:00Z",
+      "error_message": "Scaffolding do CronProvider: cron.schedule(task.cron, task.execute) perde o binding de `this` e a classe nao tinha @Injectable()",
+      "file": "src/shared/providers/scheduler/implementations/cron-provider.ts",
+      "root_cause": "Passar a referencia crua de um metodo de classe como callback do node-cron desliga o metodo da sua instancia; alem disso uma excecao dentro de execute() subiria como unhandled rejection. A classe tambem estava sem @Injectable(), o que quebraria a injecao assim que ganhasse dependencias.",
+      "fix": "Envolver a execucao em arrow (() => this.run(task)) com try/catch + Logger do Nest, adicionar @Injectable() e repassar { name, timezone: 'UTC', noOverlap: true } ao node-cron.",
+      "tags": [
+        "scheduler",
+        "node-cron",
+        "this-binding",
+        "nestjs",
+        "unhandled-rejection"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-02T16:45:00Z"
+    },
+    {
+      "error_message": "NeoWs ecoa a NASA_API_KEY dentro dos campos `links` de toda resposta; repassar o payload cru vazaria a chave do servidor para todo cliente da API",
+      "file": "src/shared/providers/base/upstream-http.provider.ts",
+      "root_cause": "api.nasa.gov monta os links de paginacao com a query string recebida, incluindo api_key",
+      "fix": "`redactApiKey` (src/shared/utils/sanitize.util.ts) percorre a resposta e troca o valor de api_key por REDACTED; aplicado em `UpstreamHttpProvider.request` sempre que `requiresApiKey` for true",
+      "tags": [
+        "seguranca",
+        "vazamento-de-credencial",
+        "neows",
+        "api-key"
+      ],
+      "id": "bug-002",
+      "timestamp": "2026-09-11T13:00:00Z",
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-11T13:00:00Z"
+    },
+    {
+      "error_message": "O CLI do TypeORM falha com MODULE_NOT_FOUND ao resolver `src/shared/...` nas entidades",
+      "file": "package.json",
+      "root_cause": "`typeorm-ts-node-commonjs` registra o ts-node mas nao o tsconfig-paths, entao os imports absolutos do tsconfig (`paths: {\"*\": [\"./*\"]}`) nao resolvem",
+      "fix": "script `typeorm` trocado para `node -r ts-node/register -r tsconfig-paths/register ./node_modules/typeorm/cli.js`",
+      "tags": [
+        "typeorm",
+        "cli",
+        "tsconfig-paths",
+        "migration"
+      ],
+      "id": "bug-003",
+      "timestamp": "2026-09-11T13:00:00Z",
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-11T13:00:00Z"
+    },
+    {
+      "error_message": "Nest.js: Nest can't resolve dependencies of the ApodWordPressProvider (HttpClientProvider, ?)",
+      "file": "src/env-config/env-config.module.ts",
+      "root_cause": "`EnvConfigModule` exportava `EnvConfigService` mas nao era `@Global()`; os modulos de provider nao o importavam",
+      "fix": "`@Global()` no `EnvConfigModule` (e `HttpClientModule` ja nasceu global pelo mesmo motivo)",
+      "tags": [
+        "nestjs",
+        "injecao-de-dependencia",
+        "modulo-global"
+      ],
+      "id": "bug-004",
+      "timestamp": "2026-09-11T13:00:00Z",
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-11T13:00:00Z"
+    },
+    {
+      "error_message": "jest --config ./test/jest-e2e.json nao termina; so encerra com --forceExit",
+      "file": "src/shared/providers/scheduler/implementations/cron-provider.ts",
+      "root_cause": "Os timers do node-cron sao handles ativos do event loop e nunca eram destruidos",
+      "fix": "`CronProvider` implementa `OnApplicationShutdown` guardando as ScheduledTask e chamando `destroy()`; `app.enableShutdownHooks()` adicionado ao `appConfig`",
+      "tags": [
+        "jest",
+        "e2e",
+        "node-cron",
+        "open-handles",
+        "shutdown"
+      ],
+      "id": "bug-005",
+      "timestamp": "2026-09-11T13:00:00Z",
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-11T13:00:00Z"
+    },
+    {
+      "error_message": "api.nasa.gov/techtransfer responde HTML (pagina do portal) em vez de JSON, mesmo com Accept: application/json",
+      "file": "src/shared/providers/tech-transfer/implementation/tech-transfer-provider.ts",
+      "root_cause": "O endpoint documentado passou a servir a SPA do portal",
+      "fix": "Provider aponta para o backend real `technology.nasa.gov/api/query/{categoria}/{termo}` e converte os arrays posicionais em objetos nomeados",
+      "tags": [
+        "techtransfer",
+        "upstream-quebrado",
+        "nasa"
+      ],
+      "id": "bug-006",
+      "timestamp": "2026-09-11T13:00:00Z",
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-11T13:00:00Z"
+    },
+    {
+      "error_message": "API WordPress do APOD ignora date, start_date, end_date e count, ao contrario da doc em api.nasa.gov",
+      "file": "src/shared/providers/nasa/implementation/apod-wordpress.provider.ts",
+      "root_cause": "A colecao e uma rota REST padrao do WordPress: so `per_page` (teto 25) e `page` sao respeitados",
+      "fix": "Usar `GET /apod-basic/{yymmdd}` por data e montar intervalo e sorteio no provider, com concorrencia limitada e 404 tratado como ausencia",
+      "tags": [
+        "apod",
+        "wordpress",
+        "doc-incorreta",
+        "deprecacao-2026-12-01"
+      ],
+      "id": "bug-007",
+      "timestamp": "2026-09-11T13:00:00Z",
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-11T13:00:00Z"
+    },
+    {
+      "error_message": "Teste e2e do EONET recebeu EONET_24184 em vez do evento do stub",
+      "file": "test/app.e2e-spec.ts",
+      "root_cause": "O `EonetService` le o banco antes do upstream, e eventos reais de um smoke test anterior tinham ficado na tabela",
+      "fix": "TRUNCATE em eonet_events no beforeAll/afterAll do e2e",
+      "tags": [
+        "e2e",
+        "isolamento-de-teste",
+        "eonet"
+      ],
+      "id": "bug-008",
+      "timestamp": "2026-09-11T13:00:00Z",
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-11T13:00:00Z"
+    },
+    {
+      "error_message": "Teste e2e esperava 404 e recebeu 500 numa data sem APOD",
+      "file": "test/upstream.stub.ts",
+      "root_cause": "O stub rejeitava URLs nao configuradas com um Error generico; o cliente real traduz 404 do upstream em NotFoundException",
+      "fix": "Stub passou a rejeitar com NotFoundException",
+      "tags": [
+        "e2e",
+        "stub",
+        "tratamento-de-erro"
+      ],
+      "id": "bug-009",
+      "timestamp": "2026-09-11T13:00:00Z",
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-11T13:00:00Z"
+    },
+    {
+      "error_message": "findAvailableDates devolvia Date deslocado pelo fuso local em vez de 'YYYY-MM-DD'",
+      "file": "src/modules/epic/repositories/typeorm/typeorm-epic.repository.ts",
+      "root_cause": "`getRawMany` nao passa pelo conversor de coluna do TypeORM, entao uma coluna `date` volta como Date do driver",
+      "fix": "SELECT TO_CHAR(image.captured_on, 'YYYY-MM-DD'); coberto por teste de integracao contra Postgres",
+      "tags": [
+        "typeorm",
+        "getRawMany",
+        "date",
+        "fuso-horario",
+        "epic"
+      ],
+      "id": "bug-010",
+      "timestamp": "2026-09-11T14:10:00Z",
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-11T14:10:00Z"
+    },
+    {
+      "error_message": "BadGatewayException: NASA DONKI retornou uma resposta vazia",
+      "file": "src/shared/providers/http/implementation/axios-http-client.ts",
+      "root_cause": "O guard de corpo vazio tratava `null` como resposta malformada, mas o DONKI usa `null` para 'nenhum evento' — a normalizacao do provider nunca era alcancada",
+      "fix": "O guard passou a rejeitar apenas `undefined` e string vazia; normalizar `null` e papel do provider",
+      "tags": [
+        "http-client",
+        "donki",
+        "resposta-nula"
+      ],
+      "id": "bug-011",
+      "timestamp": "2026-09-11T14:10:00Z",
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-11T14:10:00Z"
+    },
+    {
+      "error_message": "migration:generate queria dropar (ou converter para B-tree) os 5 indices GIN",
+      "file": "src/modules/eonet/entities/eonet-event.entity.ts",
+      "root_cause": "Sem declaracao na entidade o CLI considera o indice orfao; declarado sem flag, ele compara o metodo lido do banco e reescreve como B-tree",
+      "fix": "@Index(\"nome\", { synchronize: false }) nas colunas com GIN; a migration continua criando o indice em SQL cru",
+      "tags": [
+        "typeorm",
+        "indice-gin",
+        "migration-drift",
+        "synchronize"
+      ],
+      "id": "bug-012",
+      "timestamp": "2026-09-11T14:10:00Z",
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-11T14:10:00Z"
+    },
+    {
+      "error_message": "Cannot find module 'src/config/typeorm.config' no globalSetup do Jest",
+      "file": "tests/support/global-setup.ts",
+      "root_cause": "O globalSetup roda fora do moduleNameMapper do Jest",
+      "fix": "`import \"tsconfig-paths/register\"` no topo do globalSetup e imports relativos a src/ nos arquivos de tests/support/",
+      "tags": [
+        "jest",
+        "globalSetup",
+        "tsconfig-paths",
+        "module-resolution"
+      ],
+      "id": "bug-013",
+      "timestamp": "2026-09-11T14:10:00Z",
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-11T14:10:00Z"
+    },
+    {
+      "error_message": "Type 'string' is not assignable to type 'Uint8Array' ao espalhar typeOrmConfig",
+      "file": "src/config/typeorm.config.ts",
+      "root_cause": "`DataSourceOptions` e a uniao de todos os drivers; o spread perde o discriminante `type` e o TS passa a considerar variantes como a do sql.js",
+      "fix": "typeOrmConfig tipado como Extract<DataSourceOptions, { type: \"postgres\" }>",
+      "tags": [
+        "typescript",
+        "typeorm",
+        "uniao-discriminada"
+      ],
+      "id": "bug-014",
+      "timestamp": "2026-09-11T14:10:00Z",
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-11T14:10:00Z"
+    },
+    {
+      "error_message": "Teste e2e do TechPort: on('/projects', ...) roubava as chamadas de on('/projects/93851', ...)",
+      "file": "tests/support/upstream-stub.ts",
+      "root_cause": "O stub casava pelo primeiro trecho registrado, nao pelo mais especifico",
+      "fix": "Passou a casar pelo trecho mais longo entre os registrados",
+      "tags": [
+        "teste",
+        "stub",
+        "roteamento"
+      ],
+      "id": "bug-015",
+      "timestamp": "2026-09-11T14:10:00Z",
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-11T14:10:00Z"
+    }
+  ]
+}
