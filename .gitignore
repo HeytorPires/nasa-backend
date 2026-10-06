@@ -61,3 +61,6 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 # lockfile único: yarn
 package-lock.json
+
+# marcador do último deploy bem-sucedido na VPS
+.last_deploy_tag

@@ -1,4 +1,5 @@
 import "dotenv/config";
+import { join } from "path";
 import { DataSource, DataSourceOptions } from "typeorm";
 
 type PostgresDataSourceOptions = Extract<DataSourceOptions, { type: "postgres" }>;
@@ -49,5 +50,5 @@ export const typeOrmConfig: PostgresDataSourceOptions = {
 
 export default new DataSource({
     ...typeOrmConfig,
-    migrations: ["src/shared/infra/typeorm/migrations/*.ts"],
+    migrations: [join(__dirname, "../shared/infra/typeorm/migrations", __filename.endsWith(".ts") ? "*.ts" : "*.js")],
 });

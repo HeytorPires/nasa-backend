@@ -8,6 +8,8 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "typecheck": "tsc --noEmit",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
@@ -22,6 +24,10 @@
     "migration:generate": "npm run typeorm -- migration:generate src/shared/infra/typeorm/migrations/Migration -d src/config/typeorm.config.ts",
     "migration:run": "npm run typeorm -- migration:run -d src/config/typeorm.config.ts",
     "migration:revert": "npm run typeorm -- migration:revert -d src/config/typeorm.config.ts",
+    "migration:check": "npm run typeorm -- migration:generate src/shared/infra/typeorm/migrations/Drift -d src/config/typeorm.config.ts --check",
+    "migration:run:prod": "typeorm migration:run -d dist/config/typeorm.config.js",
+    "migration:revert:prod": "typeorm migration:revert -d dist/config/typeorm.config.js",
+    "migration:show:prod": "typeorm migration:show -d dist/config/typeorm.config.js",
     "lint:check": "eslint \"{src,tests}/**/*.ts\"",
     "test:integration": "jest --config ./tests/jest-integration.json",
     "test:smoke": "jest --config ./tests/jest-smoke.json"
