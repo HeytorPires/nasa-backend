@@ -30,8 +30,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   `node -r ts-node/register -r tsconfig-paths/register`; sem `tsconfig-paths` o CLI não resolve os
   imports absolutos `src/...`. Com o schema em dia, `migration:generate` **sai vazia**: uma migration
   gerada com conteúdo significa que entidade e migration divergiram
-- `docker compose up -d postgres redis` — Postgres 18 + Redis 7 de desenvolvimento, com portas
+ `docker compose up -d postgres redis` — Postgres 18 + Redis 7 de desenvolvimento, com portas
   publicadas. `docker-compose.prod.yml` é só da VPS (app + banco sem portas expostas)
+=======
+- `docker compose up -d postgres redis` — Postgres 18 + Redis 7 de desenvolvimento, publicados em
+  `DB_PORT`/`REDIS_PORT`. `docker-compose.prod.yml` é só da VPS (app + banco sem portas expostas).
+  Os dois composes leem `DB_HOST`/`DB_PORT`/`REDIS_HOST`/`REDIS_PORT` do `.env`, e os containers
+  escutam nessas portas (`postgres -p`, `redis-server --port`). Na VPS, `DB_HOST=postgres` e
+  `REDIS_HOST=redis`: `localhost` dentro do container da aplicação é ela mesma
 
 ## Environment
 
