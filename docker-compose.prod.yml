@@ -9,7 +9,7 @@ services:
         env_file: .env
         environment:
             - NODE_ENV=production
-       ports:
+        ports:
             - "${PORT}:${PORT}"
         depends_on:
             postgres:
@@ -22,15 +22,15 @@ services:
         container_name: nasa-backend-postgres
         restart: unless-stopped
         command: ["postgres", "-p", "${DB_PORT:-5432}"]
-       environment:
+        environment:
             - POSTGRES_USER=${DB_USERNAME}
             - POSTGRES_PASSWORD=${DB_PASSWORD}
             - POSTGRES_DB=${DB_NAME}
         volumes:
             - postgres_18_data:/var/lib/postgresql
         healthcheck:
-           test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_NAME} -p ${DB_PORT:-5432}"]
-           interval: 5s
+            test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_NAME} -p ${DB_PORT:-5432}"]
+            interval: 5s
             timeout: 3s
             retries: 10
 
@@ -43,7 +43,7 @@ services:
             - redis_data:/data
         healthcheck:
             test: ["CMD", "redis-cli", "-p", "${REDIS_PORT:-6379}", "ping"]
-           interval: 5s
+            interval: 5s
             timeout: 3s
             retries: 10
 
