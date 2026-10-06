@@ -1,0 +1,112 @@
+name: CD
+
+on:
+    workflow_run:
+        workflows: [CI]
+        types: [completed]
+        branches: [main]
+
+concurrency:
+    group: deploy-production
+    cancel-in-progress: false
+
+permissions:
+    contents: read
+
+jobs:
+    deploy:
+        name: Deploy to VPS
+        runs-on: ubuntu-latest
+        timeout-minutes: 20
+        environment: production
+        if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' }}
+
+        steps:
+            - name: Validate required secrets
+              env:
+                  VPS_HOST: ${{ secrets.VPS_HOST }}
+                  VPS_USER: ${{ secrets.VPS_USER }}
+                  VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+              run: |
+                  missing=""
+                  [ -z "$VPS_HOST" ]    && missing="$missing VPS_HOST"
+                  [ -z "$VPS_USER" ]    && missing="$missing VPS_USER"
+                  [ -z "$VPS_SSH_KEY" ] && missing="$missing VPS_SSH_KEY"
+                  if [ -n "$missing" ]; then
+                    echo "::error::Secrets obrigatórios ausentes no environment 'production':$missing"
+                    exit 1
+                  fi
+
+            - name: Deploy via SSH
+              uses: appleboy/ssh-action@v1
+              with:
+                  host: ${{ secrets.VPS_HOST }}
+                  username: ${{ secrets.VPS_USER }}
+                  key: ${{ secrets.VPS_SSH_KEY }}
+                  port: ${{ secrets.VPS_PORT || 22 }}
+                  command_timeout: 15m
+                  script: |
+                      set -e
+                      cd "${{ secrets.DEPLOY_PATH || '/home/ubuntu/nasa/nasa-backend' }}"
+
+                      git pull origin main
+
+                      PREVIOUS_TAG=$(cat .last_deploy_tag 2>/dev/null || echo "latest")
+                      export IMAGE_TAG=${{ github.event.workflow_run.head_sha }}
+                      dc() { docker compose -f docker-compose.prod.yml "$@"; }
+
+                      dc pull app
+                      dc up -d postgres redis
+
+                      SHOW_BEFORE=$(dc run --rm --no-deps app yarn -s migration:show:prod)
+                      BEFORE=$(printf '%s\n' "$SHOW_BEFORE" | grep -c '\[X\]' || true)
+
+                      dc run --rm --no-deps app yarn migration:run:prod
+
+                      SHOW_AFTER=$(dc run --rm --no-deps app yarn -s migration:show:prod)
+                      AFTER=$(printf '%s\n' "$SHOW_AFTER" | grep -c '\[X\]' || true)
+                      APPLIED=$((AFTER - BEFORE))
+                      echo "Migrations aplicadas neste deploy: $APPLIED"
+
+                      dc up -d app
+
+                      check_health() {
+                        for i in $(seq 1 10); do
+                          if docker exec nasa-backend-app node -e "
+                            const http = require('http');
+                            http.get('http://localhost:' + process.env.PORT + '/health', res => process.exit(res.statusCode === 200 ? 0 : 1))
+                              .on('error', () => process.exit(1))
+                              .setTimeout(5000, () => process.exit(1));
+                          "; then
+                            return 0
+                          fi
+                          echo "Healthcheck falhou (tentativa $i/10), nova tentativa em 3s..."
+                          sleep 3
+                        done
+                        return 1
+                      }
+
+                      if ! check_health; then
+                        echo "::error::A imagem $IMAGE_TAG falhou no healthcheck. Revertendo para $PREVIOUS_TAG..."
+
+                        for i in $(seq 1 "$APPLIED"); do
+                          dc run --rm --no-deps app yarn migration:revert:prod || \
+                            echo "::warning::migration:revert falhou na reversão $i de $APPLIED."
+                        done
+
+                        export IMAGE_TAG=$PREVIOUS_TAG
+                        dc up -d app
+
+                        if ! check_health; then
+                          echo "::error::O rollback para $PREVIOUS_TAG também falhou no healthcheck. Intervenção manual necessária."
+                          exit 1
+                        fi
+
+                        echo "Rollback concluído. A aplicação voltou para $PREVIOUS_TAG."
+                        exit 1
+                      fi
+
+                      echo "$IMAGE_TAG" > .last_deploy_tag
+                      docker image prune -f
+
+                      echo "Deploy de $IMAGE_TAG concluído."
