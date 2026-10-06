@@ -1,82 +1,226 @@
 name: CI
 
 on:
-  push:
-    branches: [main]
-  pull_request:
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
+
+concurrency:
+    group: ci-${{ github.ref }}
+    cancel-in-progress: true
+
+permissions:
+    contents: read
 
 jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
+    lint:
+        name: Lint & Format
+        timeout-minutes: 10
+        runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:18
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 24
+                  cache: yarn
+
+            - name: Restore node_modules
+              id: cache-modules
+              uses: actions/cache@v4
+              with:
+                  path: node_modules
+                  key: ${{ runner.os }}-${{ runner.arch }}-node24-modules-${{ hashFiles('yarn.lock') }}
+
+            - name: Install dependencies
+              if: steps.cache-modules.outputs.cache-hit != 'true'
+              run: yarn install --frozen-lockfile
+
+            - name: Check formatting
+              run: yarn format:check
+
+            - name: Run ESLint
+              run: yarn lint:check
+
+    test:
+        name: Unit tests
+        timeout-minutes: 15
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 24
+                  cache: yarn
+
+            - name: Restore node_modules
+              id: cache-modules
+              uses: actions/cache@v4
+              with:
+                  path: node_modules
+                  key: ${{ runner.os }}-${{ runner.arch }}-node24-modules-${{ hashFiles('yarn.lock') }}
+
+            - name: Install dependencies
+              if: steps.cache-modules.outputs.cache-hit != 'true'
+              run: yarn install --frozen-lockfile
+
+            - name: Typecheck
+              run: yarn typecheck
+
+            - name: Run unit tests
+              run: yarn test --ci --coverage
+
+            - name: Upload coverage
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: coverage-report
+                  path: coverage/
+                  retention-days: 14
+
+    integration:
+        name: Integration & e2e tests
+        timeout-minutes: 20
+        runs-on: ubuntu-latest
+
+        services:
+            postgres:
+                image: postgres:18
+                env:
+                    POSTGRES_USER: postgres
+                    POSTGRES_PASSWORD: postgres
+                    POSTGRES_DB: nasa
+                ports:
+                    - 5432:5432
+                options: >-
+                    --health-cmd "pg_isready -U postgres -d nasa"
+                    --health-interval 2s
+                    --health-timeout 3s
+                    --health-retries 15
+
+            redis:
+                image: redis:7-alpine
+                ports:
+                    - 6379:6379
+                options: >-
+                    --health-cmd "redis-cli ping"
+                    --health-interval 2s
+                    --health-timeout 3s
+                    --health-retries 15
+
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: nasa_test
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd "pg_isready -U postgres"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+            PORT: "3000"
+            NASA_API_KEY: DEMO_KEY
+            DB_HOST: localhost
+            DB_PORT: "5432"
+            DB_USERNAME: postgres
+            DB_PASSWORD: postgres
+            DB_NAME: nasa
+            REDIS_HOST: localhost
+            REDIS_PORT: "6379"
 
-      redis:
-        image: redis:7-alpine
-        ports:
-          - 6379:6379
-        options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+        steps:
+            - uses: actions/checkout@v4
 
-    env:
-      PORT: "3000"
-      # A suíte e2e substitui o cliente HTTP por um stub, então nenhuma
-      # requisição sai para a NASA; a variável existe só para o boot passar.
-      NASA_API_KEY: DEMO_KEY
-      DB_HOST: localhost
-      DB_PORT: "5432"
-      DB_USERNAME: postgres
-      DB_PASSWORD: postgres
-      DB_NAME: nasa_test
-      REDIS_HOST: localhost
-      REDIS_PORT: "6379"
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 24
+                  cache: yarn
 
-    steps:
-      - uses: actions/checkout@v4
+            - name: Restore node_modules
+              id: cache-modules
+              uses: actions/cache@v4
+              with:
+                  path: node_modules
+                  key: ${{ runner.os }}-${{ runner.arch }}-node24-modules-${{ hashFiles('yarn.lock') }}
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: yarn
+            - name: Install dependencies
+              if: steps.cache-modules.outputs.cache-hit != 'true'
+              run: yarn install --frozen-lockfile
 
-      - name: Instalar dependências
-        run: yarn install --frozen-lockfile
+            - name: Run migrations
+              run: yarn migration:run
 
-      - name: Lint
-        run: yarn lint:check
+            - name: Check migration drift
+              run: yarn migration:check
 
-      - name: Build
-        run: yarn build
+            - name: Run integration tests
+              run: yarn test:integration --ci
 
-      - name: Testes unitários
-        run: yarn test --ci
+            - name: Run e2e tests
+              run: yarn test:e2e --ci
 
-      - name: Migrations
-        run: yarn migration:run
+    build:
+        name: Build
+        timeout-minutes: 10
+        runs-on: ubuntu-latest
 
-      # As suítes de integração e e2e criam e migram o banco `${DB_NAME}_test`
-      # sozinhas, a partir do globalSetup.
-      - name: Testes de integração
-        run: yarn test:integration --ci
+        steps:
+            - uses: actions/checkout@v4
 
-      - name: Testes e2e
-        run: yarn test:e2e --ci
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 24
+                  cache: yarn
 
-      # `yarn test:smoke` fica de fora: fala com a NASA de verdade e depende de
-      # rede e da cota da chave.
+            - name: Restore node_modules
+              id: cache-modules
+              uses: actions/cache@v4
+              with:
+                  path: node_modules
+                  key: ${{ runner.os }}-${{ runner.arch }}-node24-modules-${{ hashFiles('yarn.lock') }}
+
+            - name: Install dependencies
+              if: steps.cache-modules.outputs.cache-hit != 'true'
+              run: yarn install --frozen-lockfile
+
+            - name: Build
+              run: yarn build
+
+    docker:
+        name: Docker image
+        timeout-minutes: 30
+        runs-on: ubuntu-24.04-arm
+        needs: [lint, test, integration, build]
+
+        permissions:
+            contents: read
+            packages: write
+
+        env:
+            PUBLISH: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Setup Buildx
+              uses: docker/setup-buildx-action@v3
+
+            - name: Login no GHCR
+              if: env.PUBLISH == 'true'
+              uses: docker/login-action@v3
+              with:
+                  registry: ghcr.io
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Build & Push
+              uses: docker/build-push-action@v6
+              with:
+                  context: .
+                  file: ./dockerfile
+                  platforms: linux/arm64
+                  push: ${{ env.PUBLISH == 'true' }}
+                  tags: |
+                      ghcr.io/heytorpires/nasa-backend:${{ github.sha }}
+                      ghcr.io/heytorpires/nasa-backend:latest
+                  cache-from: type=gha
+                  cache-to: type=gha,mode=max
