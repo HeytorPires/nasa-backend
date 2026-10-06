@@ -20,17 +20,17 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v7
 
             - name: Setup Node.js
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@v7
               with:
                   node-version: 24
                   cache: yarn
 
             - name: Restore node_modules
               id: cache-modules
-              uses: actions/cache@v4
+              uses: actions/cache@v6
               with:
                   path: node_modules
                   key: ${{ runner.os }}-${{ runner.arch }}-node24-modules-${{ hashFiles('yarn.lock') }}
@@ -51,17 +51,17 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v7
 
             - name: Setup Node.js
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@v7
               with:
                   node-version: 24
                   cache: yarn
 
             - name: Restore node_modules
               id: cache-modules
-              uses: actions/cache@v4
+              uses: actions/cache@v6
               with:
                   path: node_modules
                   key: ${{ runner.os }}-${{ runner.arch }}-node24-modules-${{ hashFiles('yarn.lock') }}
@@ -126,17 +126,17 @@ jobs:
             REDIS_PORT: "6379"
 
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v7
 
             - name: Setup Node.js
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@v7
               with:
                   node-version: 24
                   cache: yarn
 
             - name: Restore node_modules
               id: cache-modules
-              uses: actions/cache@v4
+              uses: actions/cache@v6
               with:
                   path: node_modules
                   key: ${{ runner.os }}-${{ runner.arch }}-node24-modules-${{ hashFiles('yarn.lock') }}
@@ -163,17 +163,17 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v7
 
             - name: Setup Node.js
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@v7
               with:
                   node-version: 24
                   cache: yarn
 
             - name: Restore node_modules
               id: cache-modules
-              uses: actions/cache@v4
+              uses: actions/cache@v6
               with:
                   path: node_modules
                   key: ${{ runner.os }}-${{ runner.arch }}-node24-modules-${{ hashFiles('yarn.lock') }}
@@ -199,21 +199,21 @@ jobs:
             PUBLISH: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
 
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v7
 
             - name: Setup Buildx
-              uses: docker/setup-buildx-action@v3
+              uses: docker/setup-buildx-action@v4
 
             - name: Login no GHCR
               if: env.PUBLISH == 'true'
-              uses: docker/login-action@v3
+              uses: docker/login-action@v4
               with:
                   registry: ghcr.io
                   username: ${{ github.actor }}
                   password: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Build & Push
-              uses: docker/build-push-action@v6
+              uses: docker/build-push-action@v7
               with:
                   context: .
                   file: ./dockerfile
