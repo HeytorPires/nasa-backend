@@ -1,0 +1,15 @@
+node_modules
+dist
+coverage
+.env
+.env.*
+!.env.example
+.git
+.github
+.wolf
+.claude
+tests
+*.md
+docker-compose*.yml
+dockerfile
+.dockerignore
