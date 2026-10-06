@@ -1,7 +1,9 @@
 import { Injectable, OnModuleDestroy } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import Redis from "ioredis";
-import { ICacheProvider } from "../models/redis-provider.interface";
+import { ICacheProvider } from "../models/cache-provider.interface";
+
+const SCAN_BATCH_SIZE = 500;
 
 @Injectable()
 export class RedisCacheProvider implements ICacheProvider, OnModuleDestroy {
@@ -18,7 +20,7 @@ export class RedisCacheProvider implements ICacheProvider, OnModuleDestroy {
         await this.client.quit();
     }
 
-    async save(key: string, value: any, ttl?: number): Promise<void> {
+    async save(key: string, value: unknown, ttl?: number): Promise<void> {
         const stringValue = JSON.stringify(value);
         if (ttl) {
             await this.client.setex(key, ttl, stringValue);
@@ -37,9 +39,31 @@ export class RedisCacheProvider implements ICacheProvider, OnModuleDestroy {
     }
 
     async invalidatePrefix(prefix: string): Promise<void> {
-        const keys = await this.client.keys(`${prefix}*`);
-        if (keys.length > 0) {
-            await this.client.del(...keys);
+        let cursor = "0";
+
+        do {
+            const [nextCursor, keys] = await this.client.scan(cursor, "MATCH", `${prefix}*`, "COUNT", SCAN_BATCH_SIZE);
+            cursor = nextCursor;
+
+            if (keys.length > 0) {
+                await this.client.unlink(...keys);
+            }
+        } while (cursor !== "0");
+    }
+
+    async getOrSet<T>(key: string, ttl: number, factory: () => Promise<T>): Promise<T> {
+        const cached = await this.recover<T>(key);
+
+        if (cached !== null) {
+            return cached;
         }
+
+        const value = await factory();
+
+        if (value !== null && value !== undefined) {
+            await this.save(key, value, ttl);
+        }
+
+        return value;
     }
 }
