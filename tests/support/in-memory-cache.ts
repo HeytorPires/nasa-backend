@@ -43,6 +43,10 @@ export class InMemoryCache implements ICacheProvider {
         return value;
     }
 
+    ping(): Promise<void> {
+        return Promise.resolve();
+    }
+
     clear(): void {
         this.store.clear();
     }

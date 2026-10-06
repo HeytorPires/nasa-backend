@@ -4,4 +4,5 @@ export interface ICacheProvider {
     invalidate(key: string): Promise<void>;
     invalidatePrefix(prefix: string): Promise<void>;
     getOrSet<T>(key: string, ttl: number, factory: () => Promise<T>): Promise<T>;
+    ping(): Promise<void>;
 }

@@ -34,6 +34,10 @@ export class RedisCacheProvider implements ICacheProvider, OnModuleDestroy {
         return value ? (JSON.parse(value) as T) : null;
     }
 
+    async ping(): Promise<void> {
+        await this.client.ping();
+    }
+
     async invalidate(key: string): Promise<void> {
         await this.client.del(key);
     }
