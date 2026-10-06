@@ -1,13 +1,14 @@
 import { Module } from "@nestjs/common";
-import { NasaProvider } from "./implementation/nasa-provider";
+import { NASA_PROVIDER } from "src/shared/tokens";
+import { ApodWordPressProvider } from "./implementation/apod-wordpress.provider";
 
 @Module({
     providers: [
         {
-            provide: "NasaProvider",
-            useClass: NasaProvider,
+            provide: NASA_PROVIDER,
+            useClass: ApodWordPressProvider,
         },
     ],
-    exports: ["NasaProvider"],
+    exports: [NASA_PROVIDER],
 })
 export class NasaModule {}

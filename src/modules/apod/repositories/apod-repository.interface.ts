@@ -1,16 +1,9 @@
+import type { DeepPartial } from "typeorm";
 import { ApodEntity } from "../entities/apod.entity";
 
 export interface IApodRepository {
-    findByDate(date: Date): Promise<ApodEntity | null>;
-    create({
-        date,
-        title,
-        explanation,
-        url,
-        media_type,
-        service_version,
-        created_at,
-    }: Partial<ApodEntity>): Promise<ApodEntity>;
-    countBetweenDates(startDate: Date, endDate: Date): Promise<number>;
-    findBetweenDates(startDate: Date, endDate: Date): Promise<ApodEntity[]>;
+    findByDate(date: string): Promise<ApodEntity | null>;
+    findBetweenDates(startDate: string, endDate: string): Promise<ApodEntity[]>;
+    countBetweenDates(startDate: string, endDate: string): Promise<number>;
+    upsertMany(apods: DeepPartial<ApodEntity>[]): Promise<void>;
 }
