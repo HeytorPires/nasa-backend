@@ -131,15 +131,26 @@ cd /home/ubuntu/nasa/nasa-backend
 cp .env.example .env   # NODE_ENV=production, uma PORT livre, credenciais reais
 ```
 
+No `.env` da VPS, os hosts são os nomes dos serviços do compose, não `localhost`:
+
+```dotenv
+DB_HOST=postgres
+DB_PORT=5432
+REDIS_HOST=redis
+REDIS_PORT=6379
+```
+
 - No GitHub, crie o environment **`production oracle`** com os secrets `VPS_HOST`, `VPS_USER`,
   `VPS_SSH_KEY`, `VPS_PORT` (opcional, padrão 22) e `DEPLOY_PATH` (opcional, padrão
   `/home/ubuntu/nasa/nasa-backend`).
 - Depois do primeiro push na `main`, torne público o pacote `nasa-backend` em *Packages* do GitHub,
   para a VPS baixar a imagem sem login.
 - Em produção, Postgres e Redis ficam só na rede interna do compose; apenas `PORT` é publicada.
+  `DB_PORT` e `REDIS_PORT` definem a porta em que os containers escutam, sem expô-la no host.
 
-Dev e produção usam arquivos separados: `docker-compose.yml` (Postgres e Redis com portas, para
-desenvolver) e `docker-compose.prod.yml` (aplicação + banco, usado pelo CD).
+Dev e produção usam arquivos separados: `docker-compose.yml` (Postgres e Redis publicados em
+`DB_PORT` e `REDIS_PORT`, para desenvolver) e `docker-compose.prod.yml` (aplicação + banco, usado
+pelo CD). Os dois leem hosts e portas do `.env`.
 
 Redeploy manual de uma versão já publicada, na VPS:
 

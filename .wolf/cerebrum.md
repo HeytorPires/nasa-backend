@@ -117,3 +117,4 @@
 ## Do-Not-Repeat (2026-10-06)
 - Commitei 7 mudanças de CI/CD sozinho porque o plano aprovado tinha um passo "commitar sem push"; o usuário mandou desfazer (`git reset --mixed HEAD~7`). Não incluir passo de commit em plano sem o usuário pedir.
 - CI: o usuário quer os steps de Node (setup-node, cache de node_modules, install) explícitos em cada job, não numa composite action; e o job unitário roda `yarn test --ci --coverage`.
+- Composes leem DB_HOST/DB_PORT/REDIS_HOST/REDIS_PORT do .env; Postgres e Redis escutam na porta do .env (postgres -p, redis-server --port). Na VPS, DB_HOST=postgres e REDIS_HOST=redis (nomes dos serviços); localhost dentro do container da app é a própria app.
