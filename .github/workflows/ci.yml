@@ -30,7 +30,7 @@ jobs:
 
             - name: Restore node_modules
               id: cache-modules
-              uses: actions/cache@v4
+              uses: actions/cache@v6
               with:
                   path: node_modules
                   key: ${{ runner.os }}-${{ runner.arch }}-node24-modules-${{ hashFiles('yarn.lock') }}
@@ -61,7 +61,7 @@ jobs:
 
             - name: Restore node_modules
               id: cache-modules
-              uses: actions/cache@v4
+              uses: actions/cache@v6
               with:
                   path: node_modules
                   key: ${{ runner.os }}-${{ runner.arch }}-node24-modules-${{ hashFiles('yarn.lock') }}
@@ -136,7 +136,7 @@ jobs:
 
             - name: Restore node_modules
               id: cache-modules
-              uses: actions/cache@v4
+              uses: actions/cache@v6
               with:
                   path: node_modules
                   key: ${{ runner.os }}-${{ runner.arch }}-node24-modules-${{ hashFiles('yarn.lock') }}
@@ -173,7 +173,7 @@ jobs:
 
             - name: Restore node_modules
               id: cache-modules
-              uses: actions/cache@v4
+              uses: actions/cache@v6
               with:
                   path: node_modules
                   key: ${{ runner.os }}-${{ runner.arch }}-node24-modules-${{ hashFiles('yarn.lock') }}
