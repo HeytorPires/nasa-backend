@@ -1,0 +1,82 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: nasa_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      PORT: "3000"
+      # A suíte e2e substitui o cliente HTTP por um stub, então nenhuma
+      # requisição sai para a NASA; a variável existe só para o boot passar.
+      NASA_API_KEY: DEMO_KEY
+      DB_HOST: localhost
+      DB_PORT: "5432"
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: nasa_test
+      REDIS_HOST: localhost
+      REDIS_PORT: "6379"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+
+      - name: Instalar dependências
+        run: yarn install --frozen-lockfile
+
+      - name: Lint
+        run: yarn lint:check
+
+      - name: Build
+        run: yarn build
+
+      - name: Testes unitários
+        run: yarn test --ci
+
+      - name: Migrations
+        run: yarn migration:run
+
+      # As suítes de integração e e2e criam e migram o banco `${DB_NAME}_test`
+      # sozinhas, a partir do globalSetup.
+      - name: Testes de integração
+        run: yarn test:integration --ci
+
+      - name: Testes e2e
+        run: yarn test:e2e --ci
+
+      # `yarn test:smoke` fica de fora: fala com a NASA de verdade e depende de
+      # rede e da cota da chave.
