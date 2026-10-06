@@ -46,13 +46,15 @@
       "count": 1,
       "tokens": 2304,
       "first_read": "2026-10-06T14:30:35.194Z"
+
     }
   },
   "files_written": [],
   "edit_counts": {},
-  "anatomy_hits": 7,
+ "anatomy_hits": 5,
   "anatomy_misses": 1,
   "repeated_reads_warned": 0,
   "cerebrum_warnings": 0,
-  "stop_count": 15
+  "stop_count": 12
+
 }
