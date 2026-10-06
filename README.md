@@ -1,98 +1,141 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# NASA API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Fachada única sobre o catálogo REST/JSON aberto da NASA. Cada consulta segue o mesmo caminho —
+**cache Redis → Postgres → upstream da NASA** — e o que vem do upstream é persistido, de modo que o
+serviço acumula um histórico que as APIs de origem não oferecem.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+- Swagger: `http://localhost:$PORT/api-docs` (fora de produção, o boot loga esse link)
+- Versionamento por URI: todas as rotas vivem sob `/v1`.
 
-## Description
+## APIs cobertas
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+| Tag | Rotas | Upstream |
+|---|---|---|
+| APOD | `GET /v1/apods/:date`, `/v1/apods/range`, `/v1/apods/random` | `science.nasa.gov/wp-json/wp/v2/apod-basic` |
+| NeoWs | `GET /v1/neo/feed`, `/v1/neo/browse`, `/v1/neo/:asteroidId` | `api.nasa.gov/neo/rest/v1` |
+| DONKI | `GET /v1/donki/{cme,cme-analysis,gst,ips,flr,sep,mpc,rbe,hss,wsa-enlil,notifications}` | `api.nasa.gov/DONKI` |
+| EPIC | `GET /v1/epic/:collection/{latest,dates,date/:date}` | `epic.gsfc.nasa.gov/api` |
+| EONET | `GET /v1/eonet/{events,categories,sources,layers}` | `eonet.gsfc.nasa.gov/api/v3` |
+| Mars Weather | `GET /v1/mars-weather`, `/v1/mars-weather/:sol` | `api.nasa.gov/insight_weather` |
+| Image and Video Library | `GET /v1/media/search`, `/v1/media/:nasaId/{asset,metadata,captions}` | `images-api.nasa.gov` |
+| TechTransfer | `GET /v1/tech-transfer/{patents,patents-issued,software,spinoffs}` | `technology.nasa.gov/api/query` |
+| TLE | `GET /v1/tle`, `/v1/tle/:satelliteId` | `tle.ivanstanojevic.me/api` |
+| SSD/CNEOS | `GET /v1/ssd/{close-approaches,fireballs,sentry,nhats,scout,mission-design}` | `ssd-api.jpl.nasa.gov` |
+| TechPort | `GET /v1/techport/projects`, `/v1/techport/projects/:id` | `techport.nasa.gov/api` |
+| Exoplanets | `GET /v1/exoplanets` | `exoplanetarchive.ipac.caltech.edu/TAP` |
 
-## Project setup
+Fora do escopo por não serem REST/JSON: GIBS, Vesta/Moon/Mars Trek (WMTS) e Satellite Situation
+Center. Mars Rover Photos e Earth Imagery saíram do ar e não foram implementadas.
 
-```bash
-$ npm install
-```
+## Notas de upstream
 
-## Compile and run the project
+- **APOD:** a API legada (`api.nasa.gov/planetary/apod`) será desligada em **2026-12-01**. O provider
+  ativo já é o da API WordPress. O contrato real dela difere da tabela publicada em api.nasa.gov:
+  a coleção só respeita `per_page` (teto de 25) e `page`; `date`, `start_date`, `end_date` e `count`
+  são ignorados. O único filtro confiável é a rota por data `GET /apod-basic/{yymmdd}`, então
+  intervalos e sorteios são montados no servidor a partir de requisições por data.
+  `NasaProvider` continua no repositório como rollback, não registrado no `NasaModule`.
+- **`api_key` na resposta:** a NeoWs devolve a chave usada na requisição dentro dos campos `links`.
+  `UpstreamHttpProvider` redige esse valor antes de responder ao cliente.
+- **TechTransfer:** `api.nasa.gov/techtransfer` hoje responde com a página HTML do portal em vez de
+  JSON, mesmo com `Accept: application/json`. O provider consome o backend real,
+  `technology.nasa.gov/api/query`, e converte os arrays posicionais em objetos nomeados.
+- **EPIC:** o caminho por `api.nasa.gov` é só um redirect para `epic.gsfc.nasa.gov`, que é aberto.
+  Vamos direto, poupando um salto e a cota da chave.
+- **Exoplanet Archive:** o TAP executa qualquer ADQL recebido. A API **não** aceita ADQL livre —
+  expõe filtros nomeados, valida contra uma allowlist de colunas e monta a consulta no servidor,
+  sempre com `TOP` e um teto de 500 linhas.
 
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Run tests
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## Comandos
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+yarn install
+
+docker compose up -d postgres redis   # Postgres 18 + Redis 7
+yarn migration:run                    # cria o schema
+
+yarn start:dev                        # dev com watch
+yarn build && yarn start:prod
+
+yarn test                             # unitários (sem banco, sem rede)
+yarn test:integration                 # repositórios e providers (Postgres de pé)
+yarn test:e2e                         # HTTP completo, upstream stubado
+yarn test:smoke                       # contra a NASA real; fora do CI
+yarn test:cov
+yarn lint                             # corrige
+yarn lint:check                       # só verifica, usado no CI
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Migrations: uma por tabela em `src/shared/infra/typeorm/migrations/`, escritas com a API tipada do
+`QueryRunner`. `yarn migration:generate` grava no mesmo diretório e **deve sair vazia** enquanto o
+schema corresponder às entidades; `yarn migration:revert` desfaz a última.
 
-## Resources
+## Testes
 
-Check out a few resources that may come in handy when working with NestJS:
+| Suíte | Onde | O que cobre | Precisa de |
+|---|---|---|---|
+| Unitários | `src/**/*.spec.ts`, ao lado do código | Serviços com todas as dependências mockadas | nada |
+| Integração | `tests/integration/` | Repositórios contra Postgres e providers contra um servidor HTTP local | Postgres |
+| E2E | `tests/e2e/` | Rota HTTP → serviço → Postgres, um arquivo por módulo | Postgres |
+| Smoke | `tests/smoke/` | Forma das respostas dos upstreams reais | rede + `NASA_API_KEY` |
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+`tests/` espelha `src/`: `tests/integration/modules/<feature>/`,
+`tests/integration/shared/providers/<name>/`, `tests/e2e/modules/<feature>/`. O apoio comum vive em
+`tests/support/` — banco de teste, factory da aplicação, stub do cliente HTTP, servidor HTTP local e
+cache em memória.
 
-## Support
+Integração e e2e rodam contra um banco dedicado, `${DB_NAME}_test`, criado e migrado pelo
+`globalSetup`. Como o schema vem das migrations e não de `synchronize`, cada execução verifica que as
+migrations continuam correspondendo às entidades. A suíte smoke pula sozinha quando não há
+`NASA_API_KEY`.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## Variáveis de ambiente
 
-## Stay in touch
+`EnvConfigService` valida no boot e lança listando todas as que faltarem:
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+`PORT`, `NASA_API_KEY`, `DB_HOST`, `DB_PORT`, `DB_USERNAME`, `DB_PASSWORD`, `DB_NAME`,
+`REDIS_HOST`, `REDIS_PORT`. Veja `.env.example`.
 
-## License
+## Arquitetura
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+```
+src/
+  config/             app.config.ts (ValidationPipe 422, Swagger, CORS, versionamento), typeorm.config.ts
+  env-config/         validação de ambiente no boot (módulo global)
+  modules/<feature>/  controller + service + dto + entities + repositories
+  shared/
+    tokens.ts                  constantes dos tokens de DI
+    dto/, validators/, utils/  DTOs e validadores reaproveitados entre módulos
+    infra/typeorm/             BaseEntity, BaseTypeOrmRepository, migrations
+    providers/http/            cliente HTTP com timeout, retry com backoff e tradução de erro
+    providers/base/            UpstreamHttpProvider (URL, api_key, redação da chave)
+    providers/cache/           Redis com `getOrSet` e invalidação por prefixo via SCAN
+    providers/scheduler/       @ScheduledTask descoberto via DiscoveryModule
+    providers/<upstream>/      um provider por API da NASA
+```
+
+**Padrão provider/interface:** toda dependência externa é uma interface injetada por token string de
+`src/shared/tokens.ts`; as implementações ficam em `implementation/` e são ligadas no módulo. Trocar
+de implementação mexe só na ligação do módulo. Em compensação, **todo token precisa de mock nos
+specs** — um token novo quebra os `Test.createTestingModule` existentes.
+
+**Entidades híbridas:** cada tabela tem colunas tipadas apenas para o que é consultado (chave
+natural, datas, flags) mais um `payload jsonb` com o registro completo. Mapear os payloads da NASA
+coluna a coluna geraria centenas de colunas que quebram a cada mudança upstream.
+
+**Agendamento:** anote um método de qualquer provider com
+`@ScheduledTask({ name, cron })` — nenhuma alteração de módulo é necessária. Os timers são
+destruídos no shutdown (`app.enableShutdownHooks()` em `app.config.ts`).
+
+**Ao criar um módulo novo:** registre a entidade no array `entities` de `src/config/typeorm.config.ts`
+(não há autoload por glob) e o módulo em `src/app.module.ts`.
+
+## Ressalvas
+
+- `node-cron` agenda dentro do processo: com N réplicas, cada task roda N vezes. `noOverlap: true`
+  protege só dentro do processo. Um lock distribuído usaria o `distributed`/`runCoordinator` do
+  node-cron 4.x sobre o Redis já presente.
+- `JWT_SECRET`/`JWT_EXPIRES_IN` não existem: não há autenticação, e o bloco `addBearerAuth` em
+  `app.config.ts` segue comentado de propósito.
+- `GET /v1/ssd/scout` e `GET /v1/ssd/mission-design` ficam só em cache: o primeiro é reescrito a cada
+  minuto e o segundo é calculado a partir dos parâmetros da query.
