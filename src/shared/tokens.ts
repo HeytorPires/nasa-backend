@@ -1,0 +1,29 @@
+export const HTTP_CLIENT_PROVIDER = "HttpClientProvider";
+export const CACHE_PROVIDER = "CacheProvider";
+export const SCHEDULER_PROVIDER = "SchedulerProvider";
+
+export const NASA_PROVIDER = "NasaProvider";
+export const NEO_PROVIDER = "NeoProvider";
+export const DONKI_PROVIDER = "DonkiProvider";
+export const EPIC_PROVIDER = "EpicProvider";
+export const EONET_PROVIDER = "EonetProvider";
+export const MARS_WEATHER_PROVIDER = "MarsWeatherProvider";
+export const MEDIA_PROVIDER = "MediaProvider";
+export const TECH_TRANSFER_PROVIDER = "TechTransferProvider";
+export const TLE_PROVIDER = "TleProvider";
+export const SSD_PROVIDER = "SsdProvider";
+export const TECHPORT_PROVIDER = "TechportProvider";
+export const EXOPLANET_PROVIDER = "ExoplanetProvider";
+
+export const APOD_REPOSITORY = "ApodRepository";
+export const NEO_REPOSITORY = "NeoRepository";
+export const DONKI_REPOSITORY = "DonkiRepository";
+export const EPIC_REPOSITORY = "EpicRepository";
+export const EONET_REPOSITORY = "EonetRepository";
+export const MARS_WEATHER_REPOSITORY = "MarsWeatherRepository";
+export const MEDIA_REPOSITORY = "MediaRepository";
+export const TECH_TRANSFER_REPOSITORY = "TechTransferRepository";
+export const TLE_REPOSITORY = "TleRepository";
+export const SSD_REPOSITORY = "SsdRepository";
+export const TECHPORT_REPOSITORY = "TechportRepository";
+export const EXOPLANET_REPOSITORY = "ExoplanetRepository";
