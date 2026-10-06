@@ -6,6 +6,7 @@ export function createCacheProviderMock(): jest.Mocked<ICacheProvider> {
         recover: jest.fn(),
         invalidate: jest.fn(),
         invalidatePrefix: jest.fn(),
+        ping: jest.fn(),
         getOrSet: jest.fn(async (_key: string, _ttl: number, factory: () => Promise<unknown>) => factory()),
     } as unknown as jest.Mocked<ICacheProvider>;
 }

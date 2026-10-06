@@ -7,6 +7,7 @@ import { DonkiModule } from "./modules/donki/donki.module";
 import { EonetModule } from "./modules/eonet/eonet.module";
 import { EpicModule } from "./modules/epic/epic.module";
 import { ExoplanetsModule } from "./modules/exoplanets/exoplanets.module";
+import { HealthModule } from "./modules/health/health.module";
 import { MarsWeatherModule } from "./modules/mars-weather/mars-weather.module";
 import { MediaModule } from "./modules/media/media.module";
 import { NeoModule } from "./modules/neo/neo.module";
@@ -34,6 +35,7 @@ import { SchedulerModule } from "./shared/providers/scheduler/scheduler.module";
         SsdModule,
         TechportModule,
         ExoplanetsModule,
+        HealthModule,
         TypeOrmModule.forRoot(typeOrmConfig),
     ],
     controllers: [],
